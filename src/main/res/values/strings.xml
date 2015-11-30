@@ -14,4 +14,8 @@
     <string name="tool_arrowdashedline">ArrowD</string>
     <string name="tool_doubleline">DoubleLine</string>
     <string name="tool_arroweddoubleline">ArrowedDL</string>
+    <string name="operations_delete">Delete</string>
+    <string name="lineoperations_ConvertToline">Convert to line</string>
+    <string name="lineoperations_ConvertToArc">Convert to arc</string>
+    <string name="lineoperations_flip">flip</string>
 </resources>

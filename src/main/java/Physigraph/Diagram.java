@@ -118,14 +118,27 @@ public class Diagram {
     }
     public void DeleteLine(FLine line){
         line.Delete();
+        this.lines.remove(line);
     }
 
     public void DeleteVertex(FVertex vertex){
-        vertex.Delete();
+        for(FLine a : vertex.lines){
+            DeleteLine(a);
+            lines.remove(a);
+        }
+        vertices.remove(vertex);
     }
     private static float distance(float x1,float y1,float x2,float y2){
         float dx = x2 - x1;
         float dy = y2 - y1;
         return (float)Math.sqrt(dx*dx + dy*dy);
+    }
+
+    public float[] getCoordinateOfSelectedLine(){
+        if(selected instanceof FLine){
+            FLine l = (FLine) selected;
+            return new float[]{(l.x1 + l.x2) / 2 * scale + originx,(l.y1 + l.y2) / 2 * scale + originy};
+        }
+        return null;
     }
 }

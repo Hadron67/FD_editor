@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/lineoperations_delete"
+        android:title="@string/operations_delete" />
+    <item
+        android:id="@+id/lineoperations_convertion"
+        android:title="@string/lineoperations_ConvertToline"/>
+    <item
+        android:id="@+id/lineoperations_flip"
+        android:title="@string/lineoperations_flip" />
+</menu>

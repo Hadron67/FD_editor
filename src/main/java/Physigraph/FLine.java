@@ -16,11 +16,17 @@ public class FLine implements Cloneable,Selectable{
     protected Path path_selector;
     protected Path path_selector_radiusIndicator;
     protected float selector_width;
+    protected String Label;
+    protected float LabelPosX;
+    protected float LabelPosY;
+    protected float LabelX;
+    protected float LabelY;
 
     //this parametre only make sense when isArc = true
     protected float radius;
     protected float x1,y1,x2,y2;
     protected Paint mpaint;
+    protected Paint labelPaint;
     //for topology only
     protected FVertex v1,v2;
     public FLine(){
@@ -38,9 +44,18 @@ public class FLine implements Cloneable,Selectable{
         mpaint.setARGB(255, 0, 0, 0);
         mpaint.setStrokeWidth(6);
         mpaint.setAntiAlias(true);
+
+        this.labelPaint = new Paint();
+        labelPaint.setTextSize(40);
+        labelPaint.setARGB(255, 0, 0, 0);
+        labelPaint.setAntiAlias(true);
         this.lineWidth = 6;
 
         selector_width = 18;
+
+        this.Label = "p";
+        this.LabelPosX = 0;
+        this.LabelPosY = 30;
     }
     public Paint getPaint(){
         return mpaint;
@@ -53,6 +68,8 @@ public class FLine implements Cloneable,Selectable{
             GeneratePath(scale);
         }
         canvas.drawPath(this.p,mpaint);
+
+        canvas.drawText(Label,LabelX,LabelY,labelPaint);
     }
     protected void GeneratePath(float scale){
         p = new Path();
@@ -73,6 +90,15 @@ public class FLine implements Cloneable,Selectable{
             p.moveTo(x1, y1);
             drawArc(p, centreX, centreY, vectorX, vectorY, mtheta, (int)Math.ceil(radius * mtheta / 20), false);
         }
+    }
+    protected void updateLabelPos(){
+        float distance = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        float k1x = (x2 - x1) / distance;
+        float k1y = (y2 - y1) / distance;
+        float t1x = -(y2 - y1) / distance;
+        float t1y = (x2 - x1) / distance;
+        this.LabelX = LabelPosX * k1x + LabelPosY * t1x + (x2 + x1) / 2;
+        this.LabelY = LabelPosY * k1y + LabelPosY * t1y + (y2 + y1) / 2;
     }
     protected void GenerateSelectorPath(){
         path_selector = new Path();
@@ -125,9 +151,9 @@ public class FLine implements Cloneable,Selectable{
         }
     }
     public void setEndPoint(float[] p){
-        refresh();
         this.x2 = p[0];
         this.y2 = p[1];
+        refresh();
     }
 
     public void setEndPoint(float x,float y){
@@ -146,15 +172,6 @@ public class FLine implements Cloneable,Selectable{
         this.x2 = v.x;
         this.y2 = v.y;
         refresh();
-    }
-    @Deprecated
-    public FLine clone(){
-        try {
-            return (FLine)super.clone();
-        }
-        catch (CloneNotSupportedException e){
-            return null;
-        }
     }
     protected boolean Touched(float x,float y,float criticaldistance){
         float length = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
@@ -219,6 +236,7 @@ public class FLine implements Cloneable,Selectable{
         this.p = null;
         this.path_selector = null;
         this.path_selector_radiusIndicator = null;
+        this.updateLabelPos();
     }
     protected void dashedLineTo(Path p,float x1,float y1,float x2,float y2,int seg){
         for(float i = 0;i <= 2 * seg - 2;i += 2){
@@ -226,9 +244,19 @@ public class FLine implements Cloneable,Selectable{
             p.lineTo(x1 + ((i+1)/2/seg) * (x2 - x1),y1 + ((i+1)/2/seg) * (y2 - y1));
         }
     }
-    public void setRadius(float r){
+    protected void setRadius(float r){
         this.radius = r;
         this.isArc = true;
+        refresh();
+    }
+    public void ConvertToArc(){
+        this.radius = 0;
+        this.isArc = true;
+        refresh();
+    }
+
+    public void ConvertToLine(){
+        this.isArc = false;
         refresh();
     }
 
@@ -257,5 +285,6 @@ public class FLine implements Cloneable,Selectable{
         FVertex v = this.v1;
         this.v1 = this.v2;
         this.v2 = v;
+        refresh();
     }
 }

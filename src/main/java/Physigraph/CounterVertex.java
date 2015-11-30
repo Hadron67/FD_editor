@@ -11,7 +11,7 @@ public class CounterVertex extends FVertex{
     private static Paint cover = new Paint();
     public CounterVertex(float x,float y){
         super(x,y);
-        this.radius = 15;
+        this.radius = 20;
         this.mpaint.setStyle(Paint.Style.STROKE);
         this.mpaint.setStrokeWidth(2);
 
