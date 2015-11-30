@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tool_strateline"
+        android:title="@string/tool_strateline" />
+    <item
+        android:id="@+id/tool_arrowedline"
+        android:title="@string/tool_arrowedline" />
+    <item
+        android:id="@+id/tool_dashedline"
+        android:title="@string/tool_dashedline" />
+    <item
+        android:id="@+id/tool_arroweddashedline"
+        android:title="@string/tool_arrowdashedline" />
+    <item
+        android:id="@+id/tool_doubleline"
+        android:title="@string/tool_doubleline" />
+    <item
+        android:id="@+id/tool_arroweddoubleline"
+        android:title="@string/tool_arroweddoubleline" />
+    <item
+        android:id="@+id/tool_photon"
+        android:title="@string/tool_photon" />
+    <item
+        android:id="@+id/tool_gluon"
+        android:title="@string/tool_gluon" />
+    <item
+        android:id="@+id/tool_normalvertex"
+        android:title="@string/tool_normalvertex" />
+    <item
+        android:id="@+id/tool_countervertex"
+        android:title="@string/tool_countervertex" />
+    <item
+        android:id="@+id/tool_select"
+        android:title="@string/tool_select" />
+
+</menu>

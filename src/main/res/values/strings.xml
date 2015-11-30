@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Project2</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Tool</string>
+    <string name="tool_gluon">Gluon</string>
+    <string name="tool_strateline">Strate Line</string>
+    <string name="tool_photon">Photon</string>
+    <string name="tool_arrowedline">Arrowed</string>
+    <string name="tool_normalvertex">NVertex</string>
+    <string name="tool_countervertex">Counter</string>
+    <string name="tool_select">Select</string>
+    <string name="tool_dashedline">Dashed</string>
+    <string name="tool_arrowdashedline">ArrowD</string>
+    <string name="tool_doubleline">DoubleLine</string>
+    <string name="tool_arroweddoubleline">ArrowedDL</string>
+</resources>
