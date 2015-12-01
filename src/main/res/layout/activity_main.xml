@@ -7,7 +7,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <Views.FeynmanCanvas
+        <FCanvas.FeynmanCanvas
             android:id="@+id/sketch"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

@@ -29,6 +29,10 @@ public class FLine implements Cloneable,Selectable{
     protected Paint labelPaint;
     //for topology only
     protected FVertex v1,v2;
+
+    protected long Id;
+
+    private static long IdCount = 0;
     public FLine(){
         this(0, 0, 0, 0);
     }
@@ -53,9 +57,11 @@ public class FLine implements Cloneable,Selectable{
 
         selector_width = 18;
 
-        this.Label = "p";
+        this.Label = "";
         this.LabelPosX = 0;
         this.LabelPosY = 30;
+
+        this.Id = IdCount++;
     }
     public Paint getPaint(){
         return mpaint;
@@ -244,10 +250,13 @@ public class FLine implements Cloneable,Selectable{
             p.lineTo(x1 + ((i+1)/2/seg) * (x2 - x1),y1 + ((i+1)/2/seg) * (y2 - y1));
         }
     }
-    protected void setRadius(float r){
+    public void setRadius(float r){
         this.radius = r;
         this.isArc = true;
         refresh();
+    }
+    public float getRadius(){
+        return this.radius;
     }
     public void ConvertToArc(){
         this.radius = 0;
@@ -275,6 +284,7 @@ public class FLine implements Cloneable,Selectable{
             return null;
         }
     }
+
     public void flip(){
         float x = this.x1;
         this.x1 = this.x2;
@@ -286,5 +296,12 @@ public class FLine implements Cloneable,Selectable{
         this.v1 = this.v2;
         this.v2 = v;
         refresh();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        Log.d("destroctor","line destructed,id = " + Id);
+        super.finalize();
+        IdCount--;
     }
 }

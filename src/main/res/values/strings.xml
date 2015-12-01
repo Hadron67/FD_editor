@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Project2</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Tool</string>
+    <string name="command_undo">Undo</string>
+    <string name="command_redo">Redo</string>
+    <string name="command_clear">Clear</string>
+
     <string name="tool_gluon">Gluon</string>
     <string name="tool_strateline">Strate Line</string>
     <string name="tool_photon">Photon</string>

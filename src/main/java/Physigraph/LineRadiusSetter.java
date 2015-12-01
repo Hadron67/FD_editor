@@ -48,7 +48,7 @@ public class LineRadiusSetter {
         return line != null && line.isArc;
     }
 
-    public void setRadiusByCoodinates(float x,float y){
+    public void setRadiusByCoordinates(float x, float y){
         float distance = (float)Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1)) * diag.scale;
         float prj = ((line.y1 - line.y2) * (x - this.x) + (line.x2 - line.x1) * (y - this.y)) / distance;
         line.radius += prj;

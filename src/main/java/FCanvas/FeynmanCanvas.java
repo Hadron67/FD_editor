@@ -1,9 +1,8 @@
-package Views;
+package FCanvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -49,29 +48,33 @@ public class FeynmanCanvas extends View{
     }
 
     private View mindicator;
-
+    private OnEditListener editListener = null;
     private boolean refreshAllowed;
     private Timer limiter;
     private FrameLayout container;
 
     private boolean isSettingRadius = false;
+    private boolean isAddingLine = false;
+
+    private float oldradius;
 
     private Lattice drawingSketch;
     private FLine currentLine = null;
-    private ArrayList<FLine> diagram = null;
 
     private FLine selectedLine = null;
     private FVertex selectedVertex = null;
 
     private LineRadiusSetter linesetter = null;
 
-    private Diagram fdiagram;
+    protected Diagram fdiagram;
 
     private LineType line_type = LineType.STRATE_LINE;
     private VertexType vertexType = VertexType.NORMAL;
     private EditType state = EditType.DRAW_LINE;
 
     private float touchX,touchY;
+
+    private CommandManager cmdmgr = null;
 
     private ScaleGestureDetector zoomDetector = null;
     public enum LineType {
@@ -126,11 +129,12 @@ public class FeynmanCanvas extends View{
         super(ctx, attr);
         this.mindicator = new View(ctx);
 
+        this.cmdmgr = new CommandManager(this);
+
         this.zoomDetector = new ScaleGestureDetector(this.getContext(), new ScaleListener());
         this.drawingSketch = new Lattice(250, 0, 125f, -125f * (float) Math.sqrt(3));
         this.drawingSketch.moveCentre(this.getWidth() / 2, this.getHeight() / 2);
 
-        this.diagram = new ArrayList<>();
         this.fdiagram = new Diagram();
         this.fdiagram.moveOrigin(this.getWidth() / 2, this.getHeight() / 2);
         linesetter = new LineRadiusSetter(fdiagram);
@@ -148,8 +152,9 @@ public class FeynmanCanvas extends View{
                 FVertex vertex = fdiagram.getNearestVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
-                        if (linesetter.Touched(event.getX(), event.getY(), 50)) {
+                        if (linesetter.Touched(event.getX(), event.getY(), 80)) {
                             isSettingRadius = true;
+                            oldradius = selectedLine.getRadius();
                             return true;
                         }
                         switch (state) {
@@ -163,8 +168,12 @@ public class FeynmanCanvas extends View{
                                 break;
                             case DRAW_VERTEX:
                                 if (coordinate != null) {
-                                    if (!fdiagram.addVertex(getNewVertex(coordinate[0], coordinate[1]))) {
+                                    FVertex newvertex = getNewVertex(coordinate[0], coordinate[1]);
+                                    if (!fdiagram.addVertex(newvertex)) {
                                         Toast.makeText(FeynmanCanvas.this.getContext(), "A vertex is already there.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        cmdmgr.add(new AddVertexCommand(newvertex));
                                     }
                                 }
                                 break;
@@ -191,21 +200,25 @@ public class FeynmanCanvas extends View{
                             }
                         }
                         if (isSettingRadius) {
-                            linesetter.setRadiusByCoodinates(event.getX(), event.getY());
+                            linesetter.setRadiusByCoordinates(event.getX(), event.getY());
                         }
                         FeynmanCanvas.this.update();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        if (vertex != null && currentLine != null) {
-                            currentLine.setEndVertex(vertex);
+                        if (vertex == null && currentLine != null) {
+                            fdiagram.DeleteLine(currentLine);
                         }
-                        if (vertex == null) {
-                            fdiagram.removeLine(currentLine);
+                        else if (vertex != null && currentLine != null) {
+                            currentLine.setEndVertex(vertex);
+                            vertex.addLine(currentLine);
+                            cmdmgr.add(new AddLineCommand(currentLine));
                         }
                         currentLine = null;
                         FeynmanCanvas.this.update();
-
-                        isSettingRadius = false;
+                        if(isSettingRadius) {
+                            isSettingRadius = false;
+                            cmdmgr.add(new SetLineRadiusCommand(selectedLine,oldradius));
+                        }
                         return false;
                     default:
                 }
@@ -218,60 +231,12 @@ public class FeynmanCanvas extends View{
                 if(container == null) return false;
                 mindicator.setX(touchX);
                 mindicator.setY(touchY);
-                PopupMenu pm = new PopupMenu(mindicator.getContext(), FeynmanCanvas.this.mindicator);
-                MenuInflater inflater = pm.getMenuInflater();
                 if(selectedLine != null) {
-                    inflater.inflate(R.menu.menu_line_operations, pm.getMenu());
-                    if(selectedLine.IsArc()){
-                        pm.getMenu().getItem(1).setTitle(getResources().getString(R.string.lineoperations_ConvertToline));
-                    }
-                    else{
-                        pm.getMenu().getItem(1).setTitle(getResources().getString(R.string.lineoperations_ConvertToArc));
-                    }
-                    pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.lineoperations_delete:
-                                    fdiagram.DeleteLine(selectedLine);
-                                    selectedLine = null;
-                                    linesetter.setLine(null);
-                                    break;
-                                case R.id.lineoperations_convertion:
-                                    if (!selectedLine.IsArc()) {
-                                        selectedLine.ConvertToArc();
-                                    } else {
-                                        selectedLine.ConvertToLine();
-                                    }
-                                    break;
-                                case R.id.lineoperations_flip:
-                                    selectedLine.flip();
-                                    break;
-                            }
-                            fdiagram.Deselect();
-                            FeynmanCanvas.this.update();
-                            return true;
-                        }
-                    });
+                    getLineOperationsMenu().show();
                 }
                 else if(selectedVertex != null){
-                    inflater.inflate(R.menu.menu_vertex_operations,pm.getMenu());
-                    pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()){
-                                case R.id.vertexoperations_delete:
-                                    fdiagram.DeleteVertex(selectedVertex);
-                                    selectedVertex = null;
-                                    break;
-                            }
-                            fdiagram.Deselect();
-                            FeynmanCanvas.this.update();
-                            return true;
-                        }
-                    });
+                    getVertexOperationMenu().show();
                 }
-                pm.show();
                 return false;
             }
         });
@@ -306,6 +271,15 @@ public class FeynmanCanvas extends View{
             }catch (InterruptedException e){}
             this.postInvalidate();
         }
+    }
+    protected void callOnEdit(BasicCommand cmd){
+        if(this.editListener != null){
+            editListener.onEdit(cmd);
+        }
+    }
+
+    public void setOnEditListener(OnEditListener listener){
+        this.editListener = listener;
     }
 
     private FLine getNewLine(){
@@ -348,5 +322,79 @@ public class FeynmanCanvas extends View{
                 refreshAllowed = true;
             }
         },20);
+    }
+
+    private PopupMenu getLineOperationsMenu(){
+        PopupMenu pop = new PopupMenu(getContext(),mindicator);
+        pop.getMenuInflater().inflate(R.menu.menu_line_operations, pop.getMenu());
+        if(selectedLine.IsArc()){
+            pop.getMenu().getItem(1).setTitle(getResources().getString(R.string.lineoperations_ConvertToline));
+        }
+        else{
+            pop.getMenu().getItem(1).setTitle(getResources().getString(R.string.lineoperations_ConvertToArc));
+        }
+        pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.lineoperations_delete:
+                        cmdmgr.Do(new DeleteLineCommand(selectedLine));
+                        selectedLine = null;
+                        linesetter.setLine(null);
+                        fdiagram.Deselect();
+                        break;
+                    case R.id.lineoperations_convertion:
+                        cmdmgr.Do(new ConvertLineCommand(selectedLine));
+                        break;
+                    case R.id.lineoperations_flip:
+                        cmdmgr.Do(new FlipLineCommand(selectedLine));
+                        break;
+                }
+                FeynmanCanvas.this.update();
+                return true;
+            }
+        });
+        return pop;
+    }
+
+    private PopupMenu getVertexOperationMenu(){
+        PopupMenu pop = new PopupMenu(getContext(),mindicator);
+        pop.getMenuInflater().inflate(R.menu.menu_vertex_operations, pop.getMenu());
+        pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.vertexoperations_delete:
+                        cmdmgr.Do(new DeleteVertexCommand(selectedVertex));
+                        selectedVertex = null;
+                        fdiagram.Deselect();
+                        break;
+                }
+                FeynmanCanvas.this.update();
+                return true;
+            }
+        });
+        return pop;
+    }
+
+    public void Undo(){
+        cmdmgr.Undo();
+        this.update();
+    }
+    public void Redo(){
+        cmdmgr.Redo();
+        this.update();
+    }
+    public boolean canUndo(){
+        return cmdmgr.canUndo();
+    }
+    public boolean canRedo(){
+        return cmdmgr.canRedo();
+    }
+    public void clear(){
+        if(!fdiagram.IsEmpty()) {
+            cmdmgr.Do(new ClearCommand(fdiagram));
+            this.update();
+        }
     }
 }

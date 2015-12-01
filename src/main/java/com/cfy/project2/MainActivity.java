@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import Views.FeynmanCanvas;
+import FCanvas.BasicCommand;
+import FCanvas.FeynmanCanvas;
+import FCanvas.OnEditListener;
 import Views.ToolButton;
 
 
@@ -19,10 +21,14 @@ public class MainActivity extends Activity {
     private FeynmanCanvas sketch = null;
     private Menu m;
     private ToolButton btn_tool = null;
+    private MenuItem undobutton = null;
+    private MenuItem redobutton = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
+        redobutton = (MenuItem) findViewById(R.id.command_redo);
+        undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);
         this.sketch = (FeynmanCanvas) $(R.id.sketch);
         try {
@@ -30,6 +36,12 @@ public class MainActivity extends Activity {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
+        sketch.setOnEditListener(new OnEditListener() {
+            @Override
+            public void onEdit(BasicCommand cmd) {
+                updateButtonStatus();
+            }
+        });
         btn_tool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,17 +123,38 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        redobutton = menu.findItem(R.id.command_redo);
+        undobutton = menu.findItem(R.id.command_undo);
+        updateButtonStatus();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void updateButtonStatus(){
+        redobutton.setEnabled(sketch.canRedo());
+        undobutton.setEnabled(sketch.canUndo());
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_tool) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.command_undo:
+                if(sketch.canUndo()){
+                    sketch.Undo();
+                }
+                break;
+            case R.id.command_redo:
+                if(sketch.canRedo()){
+                    sketch.Redo();
+                }
+                break;
+            case R.id.command_clear:
+                sketch.clear();
+                break;
         }
-
+        updateButtonStatus();
         return super.onOptionsItemSelected(item);
     }
 

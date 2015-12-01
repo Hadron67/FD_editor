@@ -3,6 +3,7 @@ package Physigraph;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +38,10 @@ public class Diagram {
         this.originx += x;
         this.originy += y;
     }
+    public void setOrigin(float x,float y){
+        this.originx = x;
+        this.originy = y;
+    }
     public float getCX(){
         return this.originx;
     }
@@ -56,6 +61,9 @@ public class Diagram {
         this.scale *= scaler;
         this.originx += (this.originx - x) * (scaler - 1);
         this.originy += (this.originy - y) * (scaler - 1);
+    }
+    public void setScale(float scale){
+        this.scale = scale;
     }
     public void Draw(Canvas canvas){
         canvas.translate(this.originx, this.originy);
@@ -83,9 +91,6 @@ public class Diagram {
     }
     public float getScale(){
         return this.scale;
-    }
-    public void removeLine(FLine line){
-        this.lines.remove(line);
     }
     /*
     * @param x,y : coordinate of the point to select line , NOT TRANSFORMED ONES
@@ -119,26 +124,52 @@ public class Diagram {
     public void DeleteLine(FLine line){
         line.Delete();
         this.lines.remove(line);
+        if(selected == line){
+            selected = null;
+        }
     }
 
     public void DeleteVertex(FVertex vertex){
         for(FLine a : vertex.lines){
-            DeleteLine(a);
-            lines.remove(a);
+            FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
+            anotherVertex.lines.remove(a);
+            this.lines.remove(a);
         }
         vertices.remove(vertex);
+        if(selected == vertex){
+            selected = null;
+        }
+    }
+
+    public void AddVertexWithLines(FVertex vertex){
+        for(FLine a : vertex.lines){
+            FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
+            anotherVertex.lines.add(a);
+            this.lines.add(a);
+        }
+        vertices.add(vertex);
     }
     private static float distance(float x1,float y1,float x2,float y2){
         float dx = x2 - x1;
         float dy = y2 - y1;
         return (float)Math.sqrt(dx*dx + dy*dy);
     }
+    public boolean IsEmpty(){
+        return this.lines.isEmpty() && this.vertices.isEmpty();
+    }
+    public void splitLine(FLine line,int segs){
+        if(segs <= 1) return;
+        Constructor<? extends FLine> c;
+        try {
+            c = line.getClass().getConstructor();
+            this.DeleteLine(line);
+            if(!line.isArc){
 
-    public float[] getCoordinateOfSelectedLine(){
-        if(selected instanceof FLine){
-            FLine l = (FLine) selected;
-            return new float[]{(l.x1 + l.x2) / 2 * scale + originx,(l.y1 + l.y2) / 2 * scale + originy};
+            }
         }
-        return null;
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
