@@ -38,7 +38,7 @@ public class LineRadiusSetter {
         }
     }
     public boolean Touched(float x,float y,float critical){
-        return this.line != null && Math.sqrt((x - this.x) * (x - this.x) - (y - this.y) * (y - this.y)) - raduis <=critical;
+        return this.line != null && line.isArc && Math.sqrt((x - this.x) * (x - this.x) - (y - this.y) * (y - this.y)) - raduis <=critical;
     }
     public void setLine(FLine line){
         this.line = line;

@@ -61,6 +61,13 @@ public class Lattice {
     public float getCY(){
         return b;
     }
+    public void setCentre(float x,float y){
+        this.a = x;
+        this.b = y;
+    }
+    public void setScale(float scale){
+        this.scale = scale;
+    }
     public void rescale(float scaler,float x,float y){
         assert(scaler > 0);
         this.scale *= scaler;

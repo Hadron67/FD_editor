@@ -14,14 +14,18 @@ public class ClearCommand extends BasicCommand{
     protected void Do(FeynmanCanvas fcanvas) {
         diag = fcanvas.fdiagram;
         fcanvas.fdiagram = new Diagram();
-        fcanvas.fdiagram.setOrigin(diag.getCX(),diag.getCY());
-        fcanvas.fdiagram.setScale(diag.getScale());
+        fcanvas.setOrigin(diag.getCX(),diag.getCY());
+        fcanvas.setScale(diag.getScale());
+        fcanvas.Deselect();
+        fcanvas.update();
     }
 
     @Override
     protected void Undo(FeynmanCanvas feynmanCanvas) {
-        diag.setOrigin(feynmanCanvas.fdiagram.getCX(),feynmanCanvas.fdiagram.getCY());
-        diag.setScale(feynmanCanvas.fdiagram.getScale());
+        diag.setOrigin(feynmanCanvas.getCX(),feynmanCanvas.getCY());
+        diag.setScale(feynmanCanvas.getScale());
         feynmanCanvas.fdiagram = diag;
+        feynmanCanvas.Deselect();
+        feynmanCanvas.update();
     }
 }

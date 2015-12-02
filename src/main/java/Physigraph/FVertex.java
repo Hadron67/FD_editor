@@ -34,8 +34,12 @@ public class FVertex implements Selectable{
     protected void Draw(Canvas canvas,float scale){
         canvas.drawCircle(x,y,radius,mpaint);
     }
-    public void addLine(FLine line){
-        this.lines.add(line);
+    public boolean addLine(FLine line){
+        if(!containsLine(line)){
+            this.lines.add(line);
+            return true;
+        }
+        return false;
     }
     public float getX() {
         return x;
@@ -57,5 +61,12 @@ public class FVertex implements Selectable{
         for(FLine a : lines){
             a.Delete();
         }
+    }
+
+    public boolean containsLine(FLine line){
+        for(FLine a : this.lines){
+            if(a == line) return true;
+        }
+        return false;
     }
 }

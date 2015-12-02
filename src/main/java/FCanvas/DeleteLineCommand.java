@@ -20,6 +20,6 @@ public class DeleteLineCommand extends BasicCommand{
 
     @Override
     protected void Undo(FeynmanCanvas feynmanCanvas) {
-        feynmanCanvas.fdiagram.addLine(deletedLine);
+        feynmanCanvas.fdiagram.addLineWithVertices(deletedLine);
     }
 }

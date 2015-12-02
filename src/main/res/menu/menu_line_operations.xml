@@ -9,4 +9,7 @@
     <item
         android:id="@+id/lineoperations_flip"
         android:title="@string/lineoperations_flip" />
+    <item
+        android:id="@+id/lineopertions_split"
+        android:title="@string/lineoperations_split" />
 </menu>

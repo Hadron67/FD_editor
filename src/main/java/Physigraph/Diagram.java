@@ -34,6 +34,15 @@ public class Diagram {
         this.vertices.add(vertex);
         return true;
     }
+    public void addLineWithVertices(FLine line){
+        lines.add(line);
+        if(line.v1 != null){
+            line.v1.addLine(line);
+        }
+        if(line.v2 != null){
+            line.v2.addLine(line);
+        }
+    }
     public void moveOrigin(float x,float y){
         this.originx += x;
         this.originy += y;
@@ -159,17 +168,33 @@ public class Diagram {
     }
     public void splitLine(FLine line,int segs){
         if(segs <= 1) return;
-        Constructor<? extends FLine> c;
+        Constructor<? extends FLine> lineConstructor;
         try {
-            c = line.getClass().getConstructor();
+            lineConstructor = line.getClass().getConstructor();
+            FVertex lastvertex = line.v1;
             this.DeleteLine(line);
             if(!line.isArc){
-
+                for(float i = 1;i <= segs;i++){
+                    float x = line.x1 + (line.x2 - line.x1) * i/segs;
+                    float y = line.y1 + (line.y2 - line.y1) * i/segs;
+                    FVertex newvertex = i != segs ? new FVertex(x,y) : line.v2;
+                    if(i != segs) this.vertices.add(newvertex);
+                    FLine newline = lineConstructor.newInstance();
+                    newline.setStartVertex(lastvertex);
+                    newline.setEndVertex(newvertex);
+                    this.addLineWithVertices(newline);
+                    lastvertex = newvertex;
+                }
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-
+    }
+    private boolean containsLine(FVertex vertex,FLine line){
+        for(FLine l : vertex.lines){
+            if(l == line) return true;
+        }
+        return false;
     }
 }

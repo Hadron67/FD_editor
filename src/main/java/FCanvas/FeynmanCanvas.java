@@ -349,6 +349,9 @@ public class FeynmanCanvas extends View{
                     case R.id.lineoperations_flip:
                         cmdmgr.Do(new FlipLineCommand(selectedLine));
                         break;
+                    case R.id.lineopertions_split:
+                        fdiagram.splitLine(selectedLine,3);
+                        break;
                 }
                 FeynmanCanvas.this.update();
                 return true;
@@ -396,5 +399,28 @@ public class FeynmanCanvas extends View{
             cmdmgr.Do(new ClearCommand(fdiagram));
             this.update();
         }
+    }
+
+    public float getCX(){
+        return fdiagram.getCX();
+    }
+
+    public float getCY(){
+        return fdiagram.getCY();
+    }
+    public void setOrigin(float x,float y){
+        fdiagram.setOrigin(x,y);
+        drawingSketch.setCentre(x,y);
+    }
+    public void setScale(float scale){
+        fdiagram.setScale(scale);
+        drawingSketch.setScale(scale);
+    }
+    public float getScale(){
+        return fdiagram.getScale();
+    }
+    public void Deselect(){
+        fdiagram.Deselect();
+        linesetter.setLine(null);
     }
 }

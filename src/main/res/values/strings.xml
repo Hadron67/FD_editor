@@ -20,5 +20,6 @@
     <string name="operations_delete">Delete</string>
     <string name="lineoperations_ConvertToline">Convert to line</string>
     <string name="lineoperations_ConvertToArc">Convert to arc</string>
-    <string name="lineoperations_flip">flip</string>
+    <string name="lineoperations_flip">Flip</string>
+    <string name="lineoperations_split">Split</string>
 </resources>

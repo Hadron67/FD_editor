@@ -13,7 +13,7 @@ public class CommandManager {
 
     private FeynmanCanvas fcanvas;
 
-    private int undocount = -1;
+    private int undocount = 15;
 
     public CommandManager(FeynmanCanvas feynmanCanvas){
 
@@ -25,6 +25,12 @@ public class CommandManager {
         this.undolist.add(cmd);
         redolist.clear();
         this.fcanvas.callOnEdit(cmd);
+        if(undolist.size() > undocount && undocount > 0){
+            undolist.remove(0);
+        }
+    }
+    public void setUndoCount(int count){
+        this.undocount = count;
     }
     public void Do(BasicCommand cmd){
         cmd.Do(fcanvas);
