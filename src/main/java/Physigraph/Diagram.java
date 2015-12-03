@@ -1,7 +1,6 @@
 package Physigraph;
 
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -27,6 +26,9 @@ public class Diagram {
     public void addLine(FLine line){
         this.lines.add(line);
     }
+    public void removeLine(FLine line){
+        this.lines.remove(line);
+    }
     public boolean addVertex(FVertex vertex){
         for(FVertex a : vertices){
             if(a.x == vertex.x && a.y == vertex.y) return false;
@@ -34,7 +36,10 @@ public class Diagram {
         this.vertices.add(vertex);
         return true;
     }
-    public void addLineWithVertices(FLine line){
+    public void removeVertex(FVertex vertex){
+        vertices.remove(vertex);
+    }
+    public void AddLineAndConnectToVertices(FLine line){
         lines.add(line);
         if(line.v1 != null){
             line.v1.addLine(line);
@@ -138,7 +143,7 @@ public class Diagram {
         }
     }
 
-    public void DeleteVertex(FVertex vertex){
+    public void DeleteVertexWithLines(FVertex vertex){
         for(FLine a : vertex.lines){
             FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
             anotherVertex.lines.remove(a);
@@ -165,31 +170,6 @@ public class Diagram {
     }
     public boolean IsEmpty(){
         return this.lines.isEmpty() && this.vertices.isEmpty();
-    }
-    public void splitLine(FLine line,int segs){
-        if(segs <= 1) return;
-        Constructor<? extends FLine> lineConstructor;
-        try {
-            lineConstructor = line.getClass().getConstructor();
-            FVertex lastvertex = line.v1;
-            this.DeleteLine(line);
-            if(!line.isArc){
-                for(float i = 1;i <= segs;i++){
-                    float x = line.x1 + (line.x2 - line.x1) * i/segs;
-                    float y = line.y1 + (line.y2 - line.y1) * i/segs;
-                    FVertex newvertex = i != segs ? new FVertex(x,y) : line.v2;
-                    if(i != segs) this.vertices.add(newvertex);
-                    FLine newline = lineConstructor.newInstance();
-                    newline.setStartVertex(lastvertex);
-                    newline.setEndVertex(newvertex);
-                    this.addLineWithVertices(newline);
-                    lastvertex = newvertex;
-                }
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
     }
     private boolean containsLine(FVertex vertex,FLine line){
         for(FLine l : vertex.lines){

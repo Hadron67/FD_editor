@@ -11,18 +11,18 @@ public class SetLineRadiusCommand extends BasicCommand{
     public SetLineRadiusCommand(FLine line,float oldradius){
         this.line = line;
         this.oldradius = oldradius;
-        this.newradius = line.getRadius();
+        this.newradius = line.getRadiusVector();
     }
     public void setNewradius(float newradius){
         this.newradius = newradius;
     }
     @Override
     protected void Do(FeynmanCanvas fcanvas) {
-        line.setRadius(newradius);
+        line.setRadiusVector(newradius);
     }
 
     @Override
     protected void Undo(FeynmanCanvas feynmanCanvas) {
-        line.setRadius(oldradius);
+        line.setRadiusVector(oldradius);
     }
 }

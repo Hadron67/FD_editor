@@ -13,11 +13,11 @@ public class AddVertexCommand extends BasicCommand{
     }
     @Override
     protected void Do(FeynmanCanvas fcanvas) {
-        fcanvas.fdiagram.addVertex(addedVertex);
+        fcanvas.fdiagram.AddVertexWithLines(addedVertex);
     }
 
     @Override
     protected void Undo(FeynmanCanvas feynmanCanvas) {
-        feynmanCanvas.fdiagram.DeleteVertex(addedVertex);
+        feynmanCanvas.fdiagram.DeleteVertexWithLines(addedVertex);
     }
 }

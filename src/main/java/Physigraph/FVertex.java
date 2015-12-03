@@ -57,10 +57,8 @@ public class FVertex implements Selectable{
         canvas.drawCircle(x,y,radius + 4,mp);
     }
 
-    protected void Delete(){
-        for(FLine a : lines){
-            a.Delete();
-        }
+    public void removeLine(FLine line){
+        this.lines.remove(line);
     }
 
     public boolean containsLine(FLine line){

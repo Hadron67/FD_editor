@@ -11,5 +11,17 @@
         android:title="@string/lineoperations_flip" />
     <item
         android:id="@+id/lineopertions_split"
-        android:title="@string/lineoperations_split" />
+        android:title="@string/lineoperations_split" >
+        <menu>
+            <item
+                android:id="@+id/splitlineoperation_2"
+                android:title="@string/lineoperations_split_2"/>
+            <item
+                android:id="@+id/splitlineoperation_3"
+                android:title="@string/lineoperations_split_3"/>
+            <item
+                android:id="@+id/splitlineoperation_4"
+                android:title="@string/lineoperations_split_4"/>
+        </menu>
+    </item>
 </menu>

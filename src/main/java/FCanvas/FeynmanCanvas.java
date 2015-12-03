@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.cfy.project2.R;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -154,7 +153,7 @@ public class FeynmanCanvas extends View{
                     case MotionEvent.ACTION_DOWN:
                         if (linesetter.Touched(event.getX(), event.getY(), 80)) {
                             isSettingRadius = true;
-                            oldradius = selectedLine.getRadius();
+                            oldradius = selectedLine.getRadiusVector();
                             return true;
                         }
                         switch (state) {
@@ -163,7 +162,6 @@ public class FeynmanCanvas extends View{
                                     currentLine = getNewLine();
                                     currentLine.setStartVertex(vertex);
                                     fdiagram.addLine(currentLine);
-                                    vertex.addLine(currentLine);
                                 }
                                 break;
                             case DRAW_VERTEX:
@@ -210,7 +208,6 @@ public class FeynmanCanvas extends View{
                         }
                         else if (vertex != null && currentLine != null) {
                             currentLine.setEndVertex(vertex);
-                            vertex.addLine(currentLine);
                             cmdmgr.add(new AddLineCommand(currentLine));
                         }
                         currentLine = null;
@@ -349,8 +346,14 @@ public class FeynmanCanvas extends View{
                     case R.id.lineoperations_flip:
                         cmdmgr.Do(new FlipLineCommand(selectedLine));
                         break;
-                    case R.id.lineopertions_split:
-                        fdiagram.splitLine(selectedLine,3);
+                    case R.id.splitlineoperation_2:
+                        cmdmgr.Do(new SplitLineCommand(fdiagram,selectedLine,2));
+                        break;
+                    case R.id.splitlineoperation_3:
+                        cmdmgr.Do(new SplitLineCommand(fdiagram,selectedLine,3));
+                        break;
+                    case R.id.splitlineoperation_4:
+                        cmdmgr.Do(new SplitLineCommand(fdiagram,selectedLine,4));
                         break;
                 }
                 FeynmanCanvas.this.update();
@@ -422,5 +425,10 @@ public class FeynmanCanvas extends View{
     public void Deselect(){
         fdiagram.Deselect();
         linesetter.setLine(null);
+    }
+
+    public void setDiagram(Diagram diagram){
+        this.fdiagram = diagram;
+        linesetter = new LineRadiusSetter(diagram);
     }
 }

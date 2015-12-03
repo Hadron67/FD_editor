@@ -23,6 +23,10 @@ public class LineRadiusSetter {
         mpaint.setStyle(Paint.Style.FILL);
         mpaint.setARGB(125,208,122,76);
     }
+
+    public void setDiagram(Diagram diag){
+        this.diag = diag;
+    }
     public void Draw(Canvas canvas){
         update();
         //canvas.drawRect(x - width / 2, y - height / 2, x + width / 2, y + height / 2, mpaint);

@@ -12,7 +12,7 @@ public class DeleteVertexCommand extends BasicCommand{
     }
     @Override
     protected void Do(FeynmanCanvas fcanvas) {
-        fcanvas.fdiagram.DeleteVertex(deletedVertex);
+        fcanvas.fdiagram.DeleteVertexWithLines(deletedVertex);
     }
 
     @Override

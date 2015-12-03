@@ -12,7 +12,7 @@ public class AddLineCommand extends BasicCommand{
     }
     @Override
     protected void Do(FeynmanCanvas fcanvas) {
-        fcanvas.fdiagram.addLineWithVertices(addedline);
+        fcanvas.fdiagram.AddLineAndConnectToVertices(addedline);
     }
 
     @Override

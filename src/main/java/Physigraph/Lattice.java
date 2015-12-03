@@ -94,11 +94,6 @@ public class Lattice {
     public float[] getCurrentVector2(){
         return new float[]{k3,k4};
     }
-    public boolean regulateCoordinate(float[] coordinate,float criticalRadius){
-
-        return false;
-    }
-
     public float[] inverseTransform(int[] coordinate){
         float[] V1 = this.getCurrentVector1();
         float[] V2 = this.getCurrentVector2();

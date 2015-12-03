@@ -171,12 +171,18 @@ public class FLine implements Cloneable,Selectable{
         this.v1 = v;
         this.x1 = v.x;
         this.y1 = v.y;
+        if(!v.containsLine(this)){
+            v.addLine(this);
+        }
         refresh();
     }
     public void setEndVertex(FVertex v){
         this.v2 = v;
         this.x2 = v.x;
         this.y2 = v.y;
+        if(!v.containsLine(this)){
+            v.addLine(this);
+        }
         refresh();
     }
     protected boolean Touched(float x,float y,float criticaldistance){
@@ -250,12 +256,16 @@ public class FLine implements Cloneable,Selectable{
             p.lineTo(x1 + ((i+1)/2/seg) * (x2 - x1),y1 + ((i+1)/2/seg) * (y2 - y1));
         }
     }
-    public void setRadius(float r){
+    public void setRadiusVector(float r){
         this.radius = r;
         this.isArc = true;
         refresh();
     }
     public float getRadius(){
+        float distance = distance(x1,y1,x2,y2);
+        return (float)Math.sqrt(radius * radius + distance * distance / 4);
+    }
+    public float getRadiusVector(){
         return this.radius;
     }
     public void ConvertToArc(){
@@ -273,7 +283,7 @@ public class FLine implements Cloneable,Selectable{
         if(this.v1 != null) v1.lines.remove(this);
         if(this.v2 != null) v2.lines.remove(this);
     }
-    protected float[] getCentre(){
+    public float[] getCentre(){
         if(isArc){
             float distance = distance(x1,y1,x2,y2);
             float t1x = -(y2 - y1) / distance;
@@ -283,6 +293,11 @@ public class FLine implements Cloneable,Selectable{
         else{
             return null;
         }
+    }
+
+    public float getMAngle(){
+        float length = distance(x1,y1,x2,y2);
+        return (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,radius);
     }
 
     public void flip(){
@@ -303,5 +318,12 @@ public class FLine implements Cloneable,Selectable{
         Log.d("destroctor","line destructed,id = " + Id);
         super.finalize();
         IdCount--;
+    }
+
+    public FVertex getStartVertex(){
+        return v1;
+    }
+    public FVertex getEndVertex(){
+        return v2;
     }
 }
