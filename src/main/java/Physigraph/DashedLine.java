@@ -17,7 +17,7 @@ public class DashedLine extends FLine{
     }
 
     @Override
-    protected void GeneratePath(float scale) {
+    protected void GeneratePath() {
         p = new Path();
         float length = distance(x1,y1,x2,y2);
         if(!isArc){

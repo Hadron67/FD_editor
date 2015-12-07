@@ -9,6 +9,11 @@ import android.graphics.Paint;
  */
 public class CounterVertex extends FVertex{
     private static Paint cover = new Paint();
+
+    public CounterVertex(){
+        this(0,0);
+    }
+
     public CounterVertex(float x,float y){
         super(x,y);
         this.radius = 20;
@@ -23,8 +28,8 @@ public class CounterVertex extends FVertex{
     }
 
     @Override
-    protected void Draw(Canvas canvas, float scale) {
-        super.Draw(canvas, scale);
+    public void Draw(Canvas canvas) {
+        super.Draw(canvas);
         canvas.drawCircle(x,y,radius,cover);
         canvas.drawCircle(x, y, radius, mpaint);
         float r = radius / (float)Math.sqrt(2);

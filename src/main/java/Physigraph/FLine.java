@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 /**
@@ -69,15 +70,15 @@ public class FLine implements Cloneable,Selectable{
     public boolean IsArc(){
         return isArc;
     }
-    protected void Draw(Canvas canvas,float scale){
+    public void Draw(Canvas canvas){
         if(p == null){
-            GeneratePath(scale);
+            GeneratePath();
         }
         canvas.drawPath(this.p,mpaint);
 
-        canvas.drawText(Label,LabelX,LabelY,labelPaint);
+       // canvas.drawText(Label,LabelX,LabelY,labelPaint);
     }
-    protected void GeneratePath(float scale){
+    protected void GeneratePath(){
         p = new Path();
         if(!isArc) {
             p.moveTo(x1, y1);
@@ -94,7 +95,7 @@ public class FLine implements Cloneable,Selectable{
             float vectorY = y1 - centreY;
             float mtheta = (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,this.radius);
             p.moveTo(x1, y1);
-            drawArc(p, centreX, centreY, vectorX, vectorY, mtheta, (int)Math.ceil(radius * mtheta / 20), false);
+            drawArc(p, centreX, centreY, vectorX, vectorY, mtheta, (int)Math.ceil(radius * mtheta / 10), false);
         }
     }
     protected void updateLabelPos(){
@@ -165,6 +166,11 @@ public class FLine implements Cloneable,Selectable{
     public void setEndPoint(float x,float y){
         this.x2 = x;
         this.y2 = y;
+        refresh();
+    }
+    public void setStartPoint(float x,float y){
+        this.x1 = x;
+        this.y1 = y;
         refresh();
     }
     public void setStartVertex(FVertex v){
@@ -326,4 +332,5 @@ public class FLine implements Cloneable,Selectable{
     public FVertex getEndVertex(){
         return v2;
     }
+
 }

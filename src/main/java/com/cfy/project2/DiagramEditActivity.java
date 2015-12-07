@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,19 +15,20 @@ import android.widget.PopupMenu;
 import FCanvas.BasicCommand;
 import FCanvas.FeynmanCanvas;
 import FCanvas.OnEditListener;
+import Physigraph.Diagram;
+import Views.ToolBox;
 import Views.ToolButton;
 
 
-public class MainActivity extends Activity {
+public class DiagramEditActivity extends Activity {
     private FeynmanCanvas sketch = null;
-    private Menu m;
     private ToolButton btn_tool = null;
     private MenuItem undobutton = null;
     private MenuItem redobutton = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_main);
+        this.setContentView(R.layout.activity_editdiagram);
         redobutton = (MenuItem) findViewById(R.id.command_redo);
         undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);
@@ -45,7 +47,12 @@ public class MainActivity extends Activity {
         btn_tool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(MainActivity.this, view);
+                ToolBox tb = new ToolBox(DiagramEditActivity.this);
+                tb.setFocusable(true);
+
+                tb.showAsDropDown(btn_tool,-tb.getWidth(),-tb.getHeight());
+
+                PopupMenu popup = new PopupMenu(DiagramEditActivity.this, view);
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.menu_tool, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -110,7 +117,7 @@ public class MainActivity extends Activity {
                         return false;
                     }
                 });
-                popup.show();
+                //popup.show();
             }
         });
     }

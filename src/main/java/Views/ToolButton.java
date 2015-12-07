@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+
 /**
  * Created by cfy on 15-11-21.
  */
@@ -98,16 +99,16 @@ public class ToolButton extends View {
                 draw_doubleline(canvas);
                 break;
             case ARROWEDDOUBLELINE:
-                draw_arroweddashedline(canvas);
+                draw_arroweddoubleline(canvas);
                 break;
             default:;
         }
         super.onDraw(canvas);
     }
-    private void draw_line(Canvas canvas){
+    protected void draw_line(Canvas canvas){
         canvas.drawLine(canvas.getWidth() / 4, canvas.getHeight() / 2, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2, linepaint);
     }
-    private void draw_photon(Canvas canvas){
+    protected void draw_photon(Canvas canvas){
         Path p = new Path();
         p.moveTo(canvas.getWidth() / 4, canvas.getHeight() / 2);
         for(float i = 0;i <= 40;i++){
@@ -115,28 +116,28 @@ public class ToolButton extends View {
         }
         canvas.drawPath(p, linepaint);
     }
-    private void draw_arrow(Canvas canvas){
+    protected void draw_arrow(Canvas canvas){
         canvas.drawLine(canvas.getWidth() / 4, canvas.getHeight() / 2, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2, linepaint);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 - 20, linepaint);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 + 20, linepaint);
     }
-    private void draw_normalvertex(Canvas canvas){
+    protected void draw_normalvertex(Canvas canvas){
         canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, 20, vertexpaint);
     }
-    private void draw_counter(Canvas canvas){
+    protected void draw_counter(Canvas canvas){
         float r = 10 * (float)Math.sqrt(2);
         canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, 20, linepaint);
         canvas.drawLine(canvas.getWidth() / 2 - r, canvas.getHeight() / 2 - r,canvas.getWidth() / 2 + r, canvas.getHeight() / 2 + r,linepaint);
         canvas.drawLine(canvas.getWidth() / 2 + r, canvas.getHeight() / 2 - r, canvas.getWidth() / 2 - r, canvas.getHeight() / 2 + r, linepaint);
     }
-    private void draw_select(Canvas canvas){
+    protected void draw_select(Canvas canvas){
         dashedLine(canvas, canvas.getWidth() / 4, canvas.getHeight() / 4, canvas.getWidth()*3 / 4, canvas.getHeight() / 4, 4);
         dashedLine(canvas, canvas.getWidth() * 3 / 4, canvas.getHeight() / 4, canvas.getWidth() * 3 / 4, canvas.getHeight() * 3 / 4, 4);
         dashedLine(canvas, canvas.getWidth() * 3 / 4, canvas.getHeight() * 3 / 4, canvas.getWidth() / 4, canvas.getHeight() * 3 / 4, 4);
         dashedLine(canvas, canvas.getWidth() / 4, canvas.getHeight() * 3 / 4, canvas.getWidth() / 4, canvas.getHeight() / 4, 4);
 
     }
-    private void draw_gluon(Canvas canvas){
+    protected void draw_gluon(Canvas canvas){
         Path p = new Path();
         float x1 = canvas.getWidth() / 4;
         float x2 = canvas.getWidth()*3 / 4;
@@ -151,25 +152,25 @@ public class ToolButton extends View {
         }
         canvas.drawPath(p, linepaint);
     }
-    private void draw_dashedline(Canvas canvas){
+    protected void draw_dashedline(Canvas canvas){
         dashedLine(canvas, canvas.getWidth() / 4, canvas.getHeight() / 2, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2, 4);
     }
-    private void draw_arroweddashedline(Canvas canvas){
+    protected void draw_arroweddashedline(Canvas canvas){
         dashedLine(canvas, canvas.getWidth() / 4, canvas.getHeight() / 2, canvas.getWidth()*3 / 4, canvas.getHeight() / 2, 4);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 - 20, linepaint);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 + 20, linepaint);
     }
-    private void draw_doubleline(Canvas canvas){
+    protected void draw_doubleline(Canvas canvas){
         canvas.drawLine(canvas.getWidth() / 4, canvas.getHeight() / 2 - 5, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2 - 5, linepaint);
         canvas.drawLine(canvas.getWidth() / 4, canvas.getHeight() / 2 + 5, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2 + 5, linepaint);
     }
-    private void draw_arroweddoubleline(Canvas canvas){
+    protected void draw_arroweddoubleline(Canvas canvas){
         canvas.drawLine(canvas.getWidth() / 4, canvas.getHeight() / 2 - 5, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2 - 5, linepaint);
         canvas.drawLine(canvas.getWidth() / 4, canvas.getHeight() / 2 + 5, canvas.getWidth() * 3 / 4, canvas.getHeight() / 2 + 5, linepaint);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 - 20, linepaint);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 + 20, linepaint);
     }
-    private void dashedLine(Canvas canvas,float x1,float y1,float x2,float y2,int seg){
+    protected void dashedLine(Canvas canvas,float x1,float y1,float x2,float y2,int seg){
         for(float i = 0;i <= 2*seg - 2;i+=2){
             canvas.drawLine(x1 + (i/2/seg) * (x2 - x1),y1 + (i/2/seg) * (y2 - y1),x1 + ((i+1)/2/seg) * (x2 - x1),y1 + ((i+1)/2/seg) * (y2 - y1),linepaint);
         }

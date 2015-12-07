@@ -29,7 +29,7 @@ public class PhotonLine extends FLine{
         selector_width = 19;
     }
     @Override
-    protected void GeneratePath(float scale){
+    protected void GeneratePath(){
         p = new Path();
         float length = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
         if(!isArc) {

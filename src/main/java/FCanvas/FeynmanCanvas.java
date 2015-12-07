@@ -1,5 +1,6 @@
 package FCanvas;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -169,8 +170,7 @@ public class FeynmanCanvas extends View{
                                     FVertex newvertex = getNewVertex(coordinate[0], coordinate[1]);
                                     if (!fdiagram.addVertex(newvertex)) {
                                         Toast.makeText(FeynmanCanvas.this.getContext(), "A vertex is already there.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else{
+                                    } else {
                                         cmdmgr.add(new AddVertexCommand(newvertex));
                                     }
                                 }
@@ -205,16 +205,15 @@ public class FeynmanCanvas extends View{
                     case MotionEvent.ACTION_UP:
                         if (vertex == null && currentLine != null) {
                             fdiagram.DeleteLine(currentLine);
-                        }
-                        else if (vertex != null && currentLine != null) {
+                        } else if (vertex != null && currentLine != null) {
                             currentLine.setEndVertex(vertex);
                             cmdmgr.add(new AddLineCommand(currentLine));
                         }
                         currentLine = null;
                         FeynmanCanvas.this.update();
-                        if(isSettingRadius) {
+                        if (isSettingRadius) {
                             isSettingRadius = false;
-                            cmdmgr.add(new SetLineRadiusCommand(selectedLine,oldradius));
+                            cmdmgr.add(new SetLineRadiusCommand(selectedLine, oldradius));
                         }
                         return false;
                     default:
@@ -225,13 +224,12 @@ public class FeynmanCanvas extends View{
         this.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(container == null) return false;
+                if (container == null) return false;
                 mindicator.setX(touchX);
                 mindicator.setY(touchY);
-                if(selectedLine != null) {
+                if (selectedLine != null) {
                     getLineOperationsMenu().show();
-                }
-                else if(selectedVertex != null){
+                } else if (selectedVertex != null) {
                     getVertexOperationMenu().show();
                 }
                 return false;
@@ -261,14 +259,7 @@ public class FeynmanCanvas extends View{
         this.fdiagram.Draw(canvas);
 
     }
-    public void run(){
-        while(!Thread.currentThread().isInterrupted()){
-            try{
-                Thread.sleep(1000);
-            }catch (InterruptedException e){}
-            this.postInvalidate();
-        }
-    }
+
     protected void callOnEdit(BasicCommand cmd){
         if(this.editListener != null){
             editListener.onEdit(cmd);

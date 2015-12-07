@@ -83,10 +83,10 @@ public class Diagram {
         canvas.translate(this.originx, this.originy);
         canvas.scale(scale,scale);
         for(FLine a : lines){
-            a.Draw(canvas,scale);
+            a.Draw(canvas);
         }
         for(FVertex a : vertices){
-            a.Draw(canvas,scale);
+            a.Draw(canvas);
         }
         if(selected != null){
             selected.DrawSelection(canvas);

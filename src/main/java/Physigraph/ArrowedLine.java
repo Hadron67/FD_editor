@@ -22,8 +22,8 @@ public class ArrowedLine extends FLine{
     }
 
     @Override
-    protected void GeneratePath(float scale) {
-        super.GeneratePath(scale);
+    protected void GeneratePath() {
+        super.GeneratePath();
         if(!isArc){
             float distance = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
             float k1x = (x2 - x1) / distance;

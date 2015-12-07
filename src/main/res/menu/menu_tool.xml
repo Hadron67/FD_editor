@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/tool_strateline"
-        android:title="@string/tool_strateline" />
+        android:title="@string/tool_strateline"
+        android:actionViewClass=""/>
     <item
         android:id="@+id/tool_arrowedline"
         android:title="@string/tool_arrowedline" />

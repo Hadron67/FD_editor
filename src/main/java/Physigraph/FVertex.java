@@ -15,6 +15,10 @@ public class FVertex implements Selectable{
 
     protected float radius;
     protected ArrayList<FLine> lines;
+    public FVertex(){
+        this(0,0);
+    }
+
     public FVertex(float x,float y){
         this.x = x;
         this.y = y;
@@ -31,7 +35,7 @@ public class FVertex implements Selectable{
         this.x = x;
         this.y = y;
     }
-    protected void Draw(Canvas canvas,float scale){
+    public void Draw(Canvas canvas){
         canvas.drawCircle(x,y,radius,mpaint);
     }
     public boolean addLine(FLine line){
@@ -40,6 +44,9 @@ public class FVertex implements Selectable{
             return true;
         }
         return false;
+    }
+    public Paint getPaint(){
+        return mpaint;
     }
     public float getX() {
         return x;

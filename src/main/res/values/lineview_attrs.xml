@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LineView">
+        <attr name="LineType" format="enum">
+            <enum name="STRATE_LINE" value="0" />
+            <enum name="ARROWED_STRATE_LINE" value="1" />
+            <enum name="DASHED_LINE" value="2" />
+            <enum name="ARROWED_DASHED_LINE" value="3" />
+            <enum name="DOUBLE_LINE" value="4" />
+            <enum name="ARROWED_DOUBLE_LINE" value="5"/>
+            <enum name="PHOTON_LINE" value="6" />
+            <enum name="GLUON_LINE" value="7" />
+        </attr>
+        <attr name="LineColor" format="color" />
+    </declare-styleable>
+</resources>

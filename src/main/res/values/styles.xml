@@ -6,4 +6,15 @@
 
     </style>
 
+
+    <style name="tool_box_style" parent="android:Widget.PopupWindow">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:popupBackground">@drawable/toolbox_background</item>
+        <item name="android:shadowRadius">5</item>
+        <item name="android:shadowDx">5</item>
+        <item name="android:shadowDy">5</item>
+        <item name="android:shadowColor">#183941</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
 </resources>

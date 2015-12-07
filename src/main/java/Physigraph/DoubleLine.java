@@ -17,7 +17,7 @@ public class DoubleLine extends FLine{
         this(0,0,0,0);
     }
     @Override
-    protected void GeneratePath(float scale) {
+    protected void GeneratePath() {
         p = new Path();
         float length = distance(x1,y1,x2,y2);
         float tX = -(y2 - y1) / length;
