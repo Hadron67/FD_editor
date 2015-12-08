@@ -1,10 +1,13 @@
 package com.cfy.project2;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +19,7 @@ import FCanvas.BasicCommand;
 import FCanvas.FeynmanCanvas;
 import FCanvas.OnEditListener;
 import Physigraph.Diagram;
+import Views.ExportImageDialogue;
 import Views.ToolBox;
 import Views.ToolButton;
 
@@ -25,19 +29,45 @@ public class DiagramEditActivity extends Activity {
     private ToolButton btn_tool = null;
     private MenuItem undobutton = null;
     private MenuItem redobutton = null;
+
+    private ToolBox tb = null;
+
+    private ActionMode.Callback selectareacallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_main_export_image,menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_editdiagram);
+        initActionBar(getActionBar());
         redobutton = (MenuItem) findViewById(R.id.command_redo);
         undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);
         this.sketch = (FeynmanCanvas) $(R.id.sketch);
-        try {
-            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(255, 60, 179, 113)));
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
+
+        tb = new ToolBox(this);
+        tb.setFocusable(true);
+
+
         sketch.setOnEditListener(new OnEditListener() {
             @Override
             public void onEdit(BasicCommand cmd) {
@@ -47,77 +77,7 @@ public class DiagramEditActivity extends Activity {
         btn_tool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToolBox tb = new ToolBox(DiagramEditActivity.this);
-                tb.setFocusable(true);
-
                 tb.showAsDropDown(btn_tool,-tb.getWidth(),-tb.getHeight());
-
-                PopupMenu popup = new PopupMenu(DiagramEditActivity.this, view);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.menu_tool, popup.getMenu());
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.tool_strateline:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.STRATE_LINE);
-                                btn_tool.setShape(ToolButton.ButtonShape.LINE);
-                                break;
-                            case R.id.tool_photon:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.PHOTON);
-                                btn_tool.setShape(ToolButton.ButtonShape.PHOTON);
-                                break;
-                            case R.id.tool_arrowedline:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.ARROWED_STRATE_LINE);
-                                btn_tool.setShape(ToolButton.ButtonShape.LINE_ARROW);
-                                break;
-                            case R.id.tool_normalvertex:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_VERTEX);
-                                sketch.setVertexType(FeynmanCanvas.VertexType.NORMAL);
-                                btn_tool.setShape(ToolButton.ButtonShape.NORMALVERTEX);
-                                break;
-                            case R.id.tool_countervertex:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_VERTEX);
-                                sketch.setVertexType(FeynmanCanvas.VertexType.COUNTER);
-                                btn_tool.setShape(ToolButton.ButtonShape.COUNTERVERTEX);
-                                break;
-                            case R.id.tool_select:
-                                sketch.setEditType(FeynmanCanvas.EditType.SELECT);
-                                btn_tool.setShape(ToolButton.ButtonShape.SELECT);
-                                break;
-                            case R.id.tool_gluon:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.GLUON);
-                                btn_tool.setShape(ToolButton.ButtonShape.GLUON);
-                                break;
-                            case R.id.tool_dashedline:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.DASED_LINE);
-                                btn_tool.setShape(ToolButton.ButtonShape.DASHED);
-                                break;
-                            case R.id.tool_arroweddashedline:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.ARROWED_DASHED_LINE);
-                                btn_tool.setShape(ToolButton.ButtonShape.DASHED_ARROW);
-                                break;
-                            case R.id.tool_doubleline:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.DOUBLE_LINE);
-                                btn_tool.setShape(ToolButton.ButtonShape.DOUBLELINE);
-                                break;
-                            case R.id.tool_arroweddoubleline:
-                                sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
-                                sketch.setLineType(FeynmanCanvas.LineType.ARROWED_DOUBLE_LINE);
-                                btn_tool.setShape(ToolButton.ButtonShape.ARROWEDDOUBLELINE);
-                        }
-                        sketch.update();
-                        return false;
-                    }
-                });
-                //popup.show();
             }
         });
     }
@@ -127,6 +87,13 @@ public class DiagramEditActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    private void initActionBar(ActionBar ab){
+        if(ab != null) {
+            ab.setTitle(getResources().getString(R.string.empty));
+            ab.setBackgroundDrawable(new ColorDrawable(Color.argb(255, 60, 179, 113)));
+        }
     }
 
     @Override
@@ -160,6 +127,9 @@ public class DiagramEditActivity extends Activity {
             case R.id.command_clear:
                 sketch.clear();
                 break;
+            case R.id.mainaction_share:
+                startActionMode(selectareacallback);
+                break;
         }
         updateButtonStatus();
         return super.onOptionsItemSelected(item);
@@ -172,5 +142,83 @@ public class DiagramEditActivity extends Activity {
 
     public View $(int id){
         return findViewById(id);
+    }
+
+
+
+    public void selectToStraightLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.STRATE_LINE);
+        btn_tool.setShape(ToolButton.ButtonShape.LINE);
+        tb.dismiss();
+    }
+
+    public void selectToDashedLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.DASED_LINE);
+        btn_tool.setShape(ToolButton.ButtonShape.DASHED);
+        tb.dismiss();
+    }
+
+    public void selectToDoubleLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.DOUBLE_LINE);
+        btn_tool.setShape(ToolButton.ButtonShape.DOUBLELINE);
+        tb.dismiss();
+    }
+
+    public void selectToArrowedLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.ARROWED_STRATE_LINE);
+        btn_tool.setShape(ToolButton.ButtonShape.LINE_ARROW);
+        tb.dismiss();
+    }
+
+    public void selectToArrowedDashedLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.ARROWED_DASHED_LINE);
+        btn_tool.setShape(ToolButton.ButtonShape.DASHED_ARROW);
+        tb.dismiss();
+    }
+
+    public void selectToArrowedDoubleLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.ARROWED_DOUBLE_LINE);
+        btn_tool.setShape(ToolButton.ButtonShape.ARROWEDDOUBLELINE);
+        tb.dismiss();
+    }
+
+    public void selectToPhotonLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.PHOTON);
+        btn_tool.setShape(ToolButton.ButtonShape.PHOTON);
+        tb.dismiss();
+    }
+
+    public void selectToGluonLine(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
+        sketch.setLineType(FeynmanCanvas.LineType.GLUON);
+        btn_tool.setShape(ToolButton.ButtonShape.GLUON);
+        tb.dismiss();
+    }
+
+    public void selectToNVertex(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_VERTEX);
+        sketch.setVertexType(FeynmanCanvas.VertexType.NORMAL);
+        btn_tool.setShape(ToolButton.ButtonShape.NORMALVERTEX);
+        tb.dismiss();
+    }
+
+    public void selectToCounterVertex(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.DRAW_VERTEX);
+        sketch.setVertexType(FeynmanCanvas.VertexType.COUNTER);
+        btn_tool.setShape(ToolButton.ButtonShape.COUNTERVERTEX);
+        tb.dismiss();
+    }
+
+    public void selectToSelectMode(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.SELECT);
+        btn_tool.setShape(ToolButton.ButtonShape.SELECT);
+        tb.dismiss();
     }
 }

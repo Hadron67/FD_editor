@@ -25,4 +25,13 @@
     <string name="lineoperations_split_2">2 Segments</string>
     <string name="lineoperations_split_3">3 Segments</string>
     <string name="lineoperations_split_4">4 Segments</string>
+
+    <string name="mainActivityTile">FDeditor</string>
+
+    <string name="mainaction_share">Share</string>
+
+    <string name="exportimageaction_enter">Enter</string>
+    <string name="exportimageaction_cancel">Cancel</string>
+
+    <string name="empty"></string>
 </resources>

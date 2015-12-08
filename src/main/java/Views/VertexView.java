@@ -21,8 +21,6 @@ public class VertexView extends View{
 
     private FVertex vertex;
 
-    private boolean pressed = false;
-
     private static Paint mpaint = null;
 
 
@@ -48,23 +46,6 @@ public class VertexView extends View{
         ta.recycle();
 
         vertex.getPaint().setAntiAlias(true);
-
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pressed = true;
-                        postInvalidate();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        pressed = false;
-                        postInvalidate();
-                        break;
-                }
-                return true;
-            }
-        });
     }
 
     @Override
@@ -81,9 +62,6 @@ public class VertexView extends View{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         vertex.Draw(canvas);
-        if(pressed){
-            canvas.drawRect(0,0,canvas.getWidth(),canvas.getHeight(),mpaint);
-        }
     }
 
     private int measureHanlder(int measureSpec){

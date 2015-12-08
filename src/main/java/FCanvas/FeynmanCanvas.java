@@ -2,6 +2,7 @@ package FCanvas;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MenuItem;
@@ -296,9 +297,11 @@ public class FeynmanCanvas extends View{
     }
     public void setVertexType(VertexType type){
         this.vertexType = type;
+        update();
     }
     public void setEditType(EditType type){
         this.state = type;
+        update();
     }
     public void update(){
         if(!refreshAllowed) return;

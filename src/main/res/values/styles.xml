@@ -7,7 +7,7 @@
     </style>
 
 
-    <style name="tool_box_style" parent="android:Widget.PopupWindow">
+    <style name="tool_box_style" parent="android:Widget.ListPopupWindow">
         <item name="android:windowIsFloating">true</item>
         <item name="android:popupBackground">@drawable/toolbox_background</item>
         <item name="android:shadowRadius">5</item>

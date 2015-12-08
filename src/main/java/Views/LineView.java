@@ -5,11 +5,13 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cfy.project2.R;
 
@@ -30,7 +32,6 @@ import Physigraph.PhotonLine;
 public class LineView extends View{
     private FLine line;
 
-    private boolean pressed = false;
     private static Paint mpaint = null;
 
     public LineView(Context ctx,AttributeSet attrs){
@@ -73,23 +74,6 @@ public class LineView extends View{
         line.getPaint().setColor(ta.getColor(R.styleable.LineView_LineColor, Color.BLACK));
         ta.recycle();
 
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        pressed = true;
-                        postInvalidate();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        pressed = false;
-                        postInvalidate();
-                        break;
-                }
-
-                return true;
-            }
-        });
     }
 
     public void setLine(FLine line){
@@ -103,18 +87,20 @@ public class LineView extends View{
         int width = measureHanlder(widthMeasureSpec);
         setMeasuredDimension(width,height);
 
-        line.setStartPoint(width / 10,height / 2);
-        line.setEndPoint(width * 9 / 10, height / 2);
+        if(line instanceof GluonLine){
+            line.setEndPoint(width / 10, height / 2);
+            line.setStartPoint(width * 9 / 10, height / 2);
+        }
+        else {
+            line.setStartPoint(width / 10, height / 2);
+            line.setEndPoint(width * 9 / 10, height / 2);
+        }
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
         line.Draw(canvas);
-        if(pressed){
-            canvas.drawRect(0,0,canvas.getWidth(),canvas.getHeight(),mpaint);
-        }
-        Log.d("in ondraw", "lineview");
     }
 
     private int measureHanlder(int measureSpec){
