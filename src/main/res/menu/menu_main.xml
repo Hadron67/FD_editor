@@ -15,9 +15,4 @@
         android:title="@string/command_clear"
         android:orderInCategory="1"
         android:showAsAction="always" />
-    <item
-        android:id="@+id/mainaction_share"
-        android:title="@string/mainaction_share"
-        android:orderInCategory="4"
-        android:showAsAction="never" />
 </menu>

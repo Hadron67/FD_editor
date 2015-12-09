@@ -92,19 +92,20 @@
                 android:layout_width="0dip"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
+                android:text="@string/tool_choose"
+                android:clickable="true"
+                android:onClick="selectToChooseMode"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="0dip"
+                android:layout_height="@dimen/toolbox_itemheight"
+                android:background="@drawable/toolbox_item_background"
                 android:text="@string/tool_select"
                 android:clickable="true"
                 android:onClick="selectToSelectMode"
                 android:textSize="15sp"
                 />
-            <!--<Button-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="@dimen/toolbox_itemheight"-->
-                <!--android:background="@drawable/toolbox_item_background"-->
-                <!--android:text="@string/tool_select"-->
-                <!--android:clickable="true"-->
-                <!--android:textSize="20sp"-->
-                <!--/>-->
         </TableRow>
     </TableLayout>
 

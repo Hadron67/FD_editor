@@ -33,6 +33,6 @@
         android:title="@string/tool_countervertex" />
     <item
         android:id="@+id/tool_select"
-        android:title="@string/tool_select" />
+        android:title="@string/tool_choose" />
 
 </menu>

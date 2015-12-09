@@ -44,7 +44,6 @@ public class PhotonLine extends FLine{
             }
         }
         else{
-            //TODO:arc photon line
             float radius = (float)Math.sqrt(this.radius * this.radius + length * length / 4);
             float mtheta = (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,this.radius);
             float t1x = -(y2 - y1) / length;

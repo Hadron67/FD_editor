@@ -12,11 +12,13 @@
     <string name="tool_arrowedline">Arrowed</string>
     <string name="tool_normalvertex">NVertex</string>
     <string name="tool_countervertex">Counter</string>
-    <string name="tool_select">Select</string>
+    <string name="tool_choose">Choose</string>
     <string name="tool_dashedline">Dashed</string>
     <string name="tool_arrowdashedline">ArrowD</string>
     <string name="tool_doubleline">DoubleLine</string>
     <string name="tool_arroweddoubleline">ArrowedDL</string>
+    <string name="tool_select">Select</string>
+
     <string name="operations_delete">Delete</string>
     <string name="lineoperations_ConvertToline">Convert to line</string>
     <string name="lineoperations_ConvertToArc">Convert to arc</string>
@@ -31,7 +33,7 @@
     <string name="mainaction_share">Share</string>
 
     <string name="exportimageaction_enter">Enter</string>
-    <string name="exportimageaction_cancel">Cancel</string>
+    <string name="exportimageaction_export">Export</string>
 
     <string name="empty"></string>
 </resources>

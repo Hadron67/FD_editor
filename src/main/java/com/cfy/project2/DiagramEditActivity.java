@@ -2,18 +2,16 @@ package com.cfy.project2;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.view.ActionMode;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 
 import FCanvas.BasicCommand;
 import FCanvas.FeynmanCanvas;
@@ -46,19 +44,28 @@ public class DiagramEditActivity extends Activity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return false;
+            switch(item.getItemId()){
+                case R.id.action_select_export:
+                    Bitmap diagram = sketch.getSelectedImage();
+                    new ExportImageDialogue(DiagramEditActivity.this,diagram).show();
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    break;
+            }
+
+            return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-
+            btn_tool.Enable();
+            selectToStraightLine(null);
         }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_editdiagram);
-        initActionBar(getActionBar());
+        initActionBar();
         redobutton = (MenuItem) findViewById(R.id.command_redo);
         undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);
@@ -66,7 +73,6 @@ public class DiagramEditActivity extends Activity {
 
         tb = new ToolBox(this);
         tb.setFocusable(true);
-
 
         sketch.setOnEditListener(new OnEditListener() {
             @Override
@@ -89,11 +95,13 @@ public class DiagramEditActivity extends Activity {
         return true;
     }
 
-    private void initActionBar(ActionBar ab){
-        if(ab != null) {
-            ab.setTitle(getResources().getString(R.string.empty));
-            ab.setBackgroundDrawable(new ColorDrawable(Color.argb(255, 60, 179, 113)));
-        }
+    private void initActionBar(){
+        ActionBar ab = getActionBar();
+        if(ab == null) return;
+        ab = getActionBar();
+        ab.setTitle(getResources().getString(R.string.empty));
+        ab.setBackgroundDrawable(new ColorDrawable(Color.argb(255, 60, 179, 113)));
+        ab.show();
     }
 
     @Override
@@ -126,9 +134,6 @@ public class DiagramEditActivity extends Activity {
                 break;
             case R.id.command_clear:
                 sketch.clear();
-                break;
-            case R.id.mainaction_share:
-                startActionMode(selectareacallback);
                 break;
         }
         updateButtonStatus();
@@ -216,9 +221,17 @@ public class DiagramEditActivity extends Activity {
         tb.dismiss();
     }
 
+    public void selectToChooseMode(View v){
+        sketch.setEditType(FeynmanCanvas.EditType.CHOOSE);
+        btn_tool.setShape(ToolButton.ButtonShape.CHOOSE);
+        tb.dismiss();
+    }
+
     public void selectToSelectMode(View v){
-        sketch.setEditType(FeynmanCanvas.EditType.SELECT);
+        sketch.setEditType(FeynmanCanvas.EditType.SELECT_AREA);
         btn_tool.setShape(ToolButton.ButtonShape.SELECT);
+        btn_tool.Disable();
+        startActionMode(selectareacallback);
         tb.dismiss();
     }
 }

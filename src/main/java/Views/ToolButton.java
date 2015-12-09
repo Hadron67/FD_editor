@@ -20,9 +20,11 @@ public class ToolButton extends View {
     private Paint vertexpaint;
     private Paint textpaint;
     private ButtonShape shape_btn;
+
+    private boolean disabled = false;
     //private Path path_photon,path_arrow;
     public enum ButtonShape{
-        LINE,LINE_ARROW,DASHED,DASHED_ARROW,PHOTON,NORMALVERTEX,COUNTERVERTEX,SELECT,GLUON,DOUBLELINE,ARROWEDDOUBLELINE
+        LINE,LINE_ARROW,DASHED,DASHED_ARROW,PHOTON,NORMALVERTEX,COUNTERVERTEX,GLUON,DOUBLELINE,ARROWEDDOUBLELINE,CHOOSE,SELECT
     }
     public ToolButton(Context ctx,AttributeSet attr){
         super(ctx,attr);
@@ -44,6 +46,9 @@ public class ToolButton extends View {
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(disabled){
+                    return true;
+                }
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         background_color = Color.argb(200, 255, 125, 50);
@@ -83,8 +88,8 @@ public class ToolButton extends View {
             case COUNTERVERTEX:
                 draw_counter(canvas);
                 break;
-            case SELECT:
-                draw_select(canvas);
+            case CHOOSE:
+                draw_choose(canvas);
                 break;
             case GLUON:
                 draw_gluon(canvas);
@@ -101,8 +106,12 @@ public class ToolButton extends View {
             case ARROWEDDOUBLELINE:
                 draw_arroweddoubleline(canvas);
                 break;
+            case SELECT:
+                draw_select(canvas);
+                break;
             default:;
         }
+
         super.onDraw(canvas);
     }
     protected void draw_line(Canvas canvas){
@@ -136,6 +145,16 @@ public class ToolButton extends View {
         dashedLine(canvas, canvas.getWidth() * 3 / 4, canvas.getHeight() * 3 / 4, canvas.getWidth() / 4, canvas.getHeight() * 3 / 4, 4);
         dashedLine(canvas, canvas.getWidth() / 4, canvas.getHeight() * 3 / 4, canvas.getWidth() / 4, canvas.getHeight() / 4, 4);
 
+    }
+
+    protected void draw_choose(Canvas canvas){
+        float x1 = canvas.getWidth() / 4;
+        float x2 = canvas.getWidth()*3 / 4;
+        float y1 = canvas.getHeight()*3 / 8;
+        float y2 = canvas.getHeight()*5 / 8;
+        float r = canvas.getHeight() / 4;
+
+        canvas.drawRect(x1, y1, x2, y2, linepaint);
     }
     protected void draw_gluon(Canvas canvas){
         Path p = new Path();
@@ -178,6 +197,20 @@ public class ToolButton extends View {
     public void setShape(ButtonShape shape){
         this.shape_btn = shape;
         this.postInvalidate();
+    }
+
+    public void Disable(){
+        disabled = true;
+        background_color = Color.argb(200, 219, 164, 194);
+        setClickable(false);
+        postInvalidate();
+    }
+
+    public void Enable(){
+        disabled = false;
+        background_color = Color.argb(200, 255, 0, 50);
+        setClickable(true);
+        postInvalidate();
     }
     private void initPaths(){
 

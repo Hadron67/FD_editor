@@ -80,6 +80,7 @@ public class Diagram {
         this.scale = scale;
     }
     public void Draw(Canvas canvas){
+        canvas.save();
         canvas.translate(this.originx, this.originy);
         canvas.scale(scale,scale);
         for(FLine a : lines){
@@ -91,7 +92,7 @@ public class Diagram {
         if(selected != null){
             selected.DrawSelection(canvas);
         }
-
+        canvas.restore();
     }
     public FVertex getNearestVertex(float x,float y,float criticalRadius){
         float rx = (x - originx) / scale;
