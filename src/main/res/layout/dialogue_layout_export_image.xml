@@ -16,7 +16,6 @@
             android:layout_marginLeft="@dimen/layout_export_image_margin"
             android:layout_marginBottom="@dimen/layout_export_image_margin"
             android:layout_marginRight="@dimen/layout_export_image_margin"
-            android:background="#FFFFFF"
             android:id="@+id/imgview_export_image"
             />
 

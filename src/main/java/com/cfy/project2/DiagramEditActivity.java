@@ -2,6 +2,7 @@ package com.cfy.project2;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -49,12 +50,18 @@ public class DiagramEditActivity extends Activity {
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
             switch(item.getItemId()){
                 case R.id.action_select_export:
                     Bitmap diagram = sketch.getSelectedImage();
-                    new ExportImageDialogue(DiagramEditActivity.this,diagram,savePath + "Images/").show();
-                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    ExportImageDialogue dia = new ExportImageDialogue(DiagramEditActivity.this,diagram,savePath + "Images/");
+                    dia.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            mode.finish();
+                        }
+                    });
+                    dia.show();
                     break;
             }
 

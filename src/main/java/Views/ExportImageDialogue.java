@@ -1,6 +1,5 @@
 package Views;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,20 +7,19 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cfy.project2.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
+
 
 /**
  * Created by cfy on 15-12-8.
+ *
  */
 public class ExportImageDialogue extends Dialog{
 
@@ -48,7 +46,7 @@ public class ExportImageDialogue extends Dialog{
             public void onClick(View v) {
                 String name = savePath + java.util.UUID.randomUUID().toString() + ".jpg";
                 try {
-                    saveImage(name);
+                    saveImage(new File(name));
                     Toast.makeText(ExportImageDialogue.this.getContext(),"file\"" + name + "\" saved.",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -62,9 +60,13 @@ public class ExportImageDialogue extends Dialog{
         v.findViewById(R.id.export_img_btn_share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = savePath + java.util.UUID.randomUUID().toString() + ".jpg";
+                String name = savePath + "share.jpg";
                 try {
-                    saveImage(name);
+                    File f = new File(name);
+                    if(f.exists()) {
+                        f.delete();
+                    }
+                    saveImage(f);
                     Toast.makeText(ExportImageDialogue.this.getContext(),"file\"" + name + "\" saved.",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -80,8 +82,7 @@ public class ExportImageDialogue extends Dialog{
             }
         });
     }
-    private void saveImage(String name) throws Exception{
-        File destfile = new File(name);
+    private void saveImage(File destfile) throws Exception{
         OutputStream os = new FileOutputStream(destfile);
         img.compress(Bitmap.CompressFormat.JPEG,100,os);
         os.close();
