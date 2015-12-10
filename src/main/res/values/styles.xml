@@ -17,4 +17,9 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="exportdialogue_style" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/exportimagedialogue_background</item>
+    </style>
+
 </resources>

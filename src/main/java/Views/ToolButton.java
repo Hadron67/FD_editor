@@ -70,6 +70,7 @@ public class ToolButton extends View {
         mpaint.setStyle(Paint.Style.FILL);
         mpaint.setColor(background_color);
 
+
         canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getHeight() / 2, mpaint);
 
         switch(this.shape_btn){

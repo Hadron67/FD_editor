@@ -3,6 +3,7 @@ package FCanvas;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -216,8 +217,13 @@ public class FeynmanCanvas extends View{
                         if (vertex == null && currentLine != null) {
                             fdiagram.DeleteLine(currentLine);
                         } else if (vertex != null && currentLine != null) {
-                            currentLine.setEndVertex(vertex);
-                            cmdmgr.add(new AddLineCommand(currentLine));
+                            if(vertex == currentLine.getStartVertex()){
+                                fdiagram.DeleteLine(currentLine);
+                            }
+                            else{
+                                currentLine.setEndVertex(vertex);
+                                cmdmgr.add(new AddLineCommand(currentLine));
+                            }
                         }
                         currentLine = null;
                         FeynmanCanvas.this.update();
@@ -441,6 +447,7 @@ public class FeynmanCanvas extends View{
     public Bitmap getSelectedImage(){
         Bitmap map = Bitmap.createBitmap((int)areaselector.getWidth(),(int)areaselector.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(map);
+        canvas.drawColor(Color.WHITE);
         canvas.translate(-areaselector.getX1(),-areaselector.getY1());
         fdiagram.Draw(canvas);
         return map;

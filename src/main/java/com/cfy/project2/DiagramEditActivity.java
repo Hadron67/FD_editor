@@ -8,10 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.io.File;
 
 import FCanvas.BasicCommand;
 import FCanvas.FeynmanCanvas;
@@ -30,6 +34,8 @@ public class DiagramEditActivity extends Activity {
 
     private ToolBox tb = null;
 
+    private String savePath = "";
+
     private ActionMode.Callback selectareacallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -47,7 +53,7 @@ public class DiagramEditActivity extends Activity {
             switch(item.getItemId()){
                 case R.id.action_select_export:
                     Bitmap diagram = sketch.getSelectedImage();
-                    new ExportImageDialogue(DiagramEditActivity.this,diagram).show();
+                    new ExportImageDialogue(DiagramEditActivity.this,diagram,savePath + "Images/").show();
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     break;
             }
@@ -83,14 +89,16 @@ public class DiagramEditActivity extends Activity {
         btn_tool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tb.showAsDropDown(btn_tool,-tb.getWidth(),-tb.getHeight());
+                tb.showAsDropDown(btn_tool, -tb.getWidth(), -tb.getHeight());
             }
         });
+
+        initFiles();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -149,6 +157,20 @@ public class DiagramEditActivity extends Activity {
         return findViewById(id);
     }
 
+    private boolean initFiles(){
+        boolean result = true;
+        savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/FDeditor/";
+        File f = new File(savePath);
+        if(!f.exists() || (f.exists() && !f.isDirectory())){
+            result = f.mkdir();
+        }
+        f = new File(savePath + "Images/");
+        result = result && f.mkdir();
+        f = new File(savePath + "Diagrams/");
+        result = result && f.mkdir();
+
+        return result;
+    }
 
 
     public void selectToStraightLine(View v){

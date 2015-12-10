@@ -172,10 +172,4 @@ public class Diagram {
     public boolean IsEmpty(){
         return this.lines.isEmpty() && this.vertices.isEmpty();
     }
-    private boolean containsLine(FVertex vertex,FLine line){
-        for(FLine l : vertex.lines){
-            if(l == line) return true;
-        }
-        return false;
-    }
 }

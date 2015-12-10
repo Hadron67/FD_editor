@@ -3,22 +3,88 @@ package Views;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.cfy.project2.R;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Created by cfy on 15-12-8.
  */
 public class ExportImageDialogue extends Dialog{
-    public ExportImageDialogue(Context context,Bitmap img) {
-        super(context);
+
+    private Bitmap img = null;
+
+    private String savePath = null;
+
+    public ExportImageDialogue(Context context,Bitmap img,String filepath) {
+        super(context,R.style.exportdialogue_style);
+        this.img = img;
+        savePath = filepath;
         View v = LayoutInflater.from(context).inflate(R.layout.dialogue_layout_export_image,null);
         ImageView imgview = (ImageView) v.findViewById(R.id.imgview_export_image);
         imgview.setImageBitmap(img);
         this.setContentView(v);
+        v.findViewById(R.id.export_img_btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        v.findViewById(R.id.export_img_btn_save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = savePath + java.util.UUID.randomUUID().toString() + ".jpg";
+                try {
+                    saveImage(name);
+                    Toast.makeText(ExportImageDialogue.this.getContext(),"file\"" + name + "\" saved.",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ExportImageDialogue.this.getContext(),e.toString(),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dismiss();
+            }
+        });
+
+        v.findViewById(R.id.export_img_btn_share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = savePath + java.util.UUID.randomUUID().toString() + ".jpg";
+                try {
+                    saveImage(name);
+                    Toast.makeText(ExportImageDialogue.this.getContext(),"file\"" + name + "\" saved.",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ExportImageDialogue.this.getContext(),e.toString(),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(name));
+                ExportImageDialogue.this.getContext().startActivity(intent);
+                dismiss();
+            }
+        });
     }
+    private void saveImage(String name) throws Exception{
+        File destfile = new File(name);
+        OutputStream os = new FileOutputStream(destfile);
+        img.compress(Bitmap.CompressFormat.JPEG,100,os);
+        os.close();
+    }
+
 }

@@ -1,7 +1,5 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">0dp</dimen>
-    <dimen name="activity_vertical_margin">0dp</dimen>
     <dimen name="toolbox_width">200dip</dimen>
     <dimen name="toolbox_height">200dip</dimen>
     <dimen name="toolbox_itemheight">50dip</dimen>
@@ -9,4 +7,8 @@
     <dimen name="areaselector_cornerradius">10dip</dimen>
     <dimen name="areaselector_defaultpadding">50dip</dimen>
     <dimen name="areaselctor_defaultwidth">200dip</dimen>
+
+    <dimen name="picture_preview_width">200dip</dimen>
+    <dimen name="picture_preview_height">200dip</dimen>
+    <dimen name="layout_export_image_margin">30dp</dimen>
 </resources>
