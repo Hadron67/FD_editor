@@ -15,8 +15,11 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import FCanvas.BasicCommand;
 import FCanvas.FeynmanCanvas;
@@ -28,6 +31,11 @@ import Views.ToolButton;
 
 
 public class DiagramEditActivity extends Activity {
+
+    public static final int RESCODE_SAVEFILE = 0;
+    public static final int RESCODE_OPENFILE = 1;
+    public static final int RESCODE_SAVEIMAGE = 2;
+
     private FeynmanCanvas sketch = null;
     private ToolButton btn_tool = null;
     private MenuItem undobutton = null;
@@ -55,13 +63,8 @@ public class DiagramEditActivity extends Activity {
                 case R.id.action_select_export:
                     Bitmap diagram = sketch.getSelectedImage();
                     ExportImageDialogue dia = new ExportImageDialogue(DiagramEditActivity.this,diagram,savePath + "Images/");
-                    dia.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            mode.finish();
-                        }
-                    });
                     dia.show();
+
                     break;
             }
 
@@ -78,7 +81,6 @@ public class DiagramEditActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_editdiagram);
-        initActionBar();
         redobutton = (MenuItem) findViewById(R.id.command_redo);
         undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);

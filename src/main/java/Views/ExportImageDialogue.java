@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cfy.project2.DiagramEditActivity;
+import com.cfy.project2.FileNavigateActivity;
 import com.cfy.project2.R;
 
 import java.io.File;
@@ -27,7 +29,7 @@ public class ExportImageDialogue extends Dialog{
 
     private String savePath = null;
 
-    public ExportImageDialogue(Context context,Bitmap img,String filepath) {
+    public ExportImageDialogue(final Context context,Bitmap img,String filepath) {
         super(context,R.style.exportdialogue_style);
         this.img = img;
         savePath = filepath;
@@ -44,15 +46,20 @@ public class ExportImageDialogue extends Dialog{
         v.findViewById(R.id.export_img_btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = savePath + java.util.UUID.randomUUID().toString() + ".jpg";
-                try {
-                    saveImage(new File(name));
-                    Toast.makeText(ExportImageDialogue.this.getContext(),"file\"" + name + "\" saved.",Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(ExportImageDialogue.this.getContext(),e.toString(),Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                String name = savePath + java.util.UUID.randomUUID().toString() + ".jpg";
+//                try {
+//                    saveImage(new File(name));
+//                    Toast.makeText(ExportImageDialogue.this.getContext(),"file\"" + name + "\" saved.",Toast.LENGTH_SHORT).show();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(ExportImageDialogue.this.getContext(),e.toString(),Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+                Intent intent = new Intent(context, FileNavigateActivity.class);
+                intent.putExtra("path",savePath);
+                intent.putExtra("saveFile",true);
+                intent.putExtra("RequestCode", DiagramEditActivity.RESCODE_SAVEIMAGE);
+                context.startActivity(intent);
                 dismiss();
             }
         });

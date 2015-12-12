@@ -13,4 +13,16 @@
         </attr>
         <attr name="LineColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="VertexView">
+        <attr name="VertexType" format="enum">
+            <enum name="NORMAL_VERTEX" value="0"/>
+            <enum name="COUNTER_VERTEX" value="1" />
+        </attr>
+        <attr name="VertexColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="SlidingPaneLayout">
+        <attr name="overhangSize" format="dimension" />
+    </declare-styleable>
 </resources>

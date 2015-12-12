@@ -1,9 +1,42 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.FDeditor">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="Theme.FDeditor.NoTitleBar" parent="android:Theme.Holo.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.FDeditor" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="windowActionBarOverlay">true</item>
         <item name="android:actionModeBackground">@drawable/actionmode_background</item>
+
+        <item name="android:alertDialogStyle">@style/exportdialogue_style</item>
+
+        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+        <item name="colorPrimary">@color/primary_material_dark</item>
+    </style>
+
+    <style name="Theme.FDeditor.List" parent="android:Widget.AbsListView">
+        <item name="android:listSelector">@drawable/list_item_background</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <style name="ActionBar" parent="android:Widget.ActionBar">
+        <item name="android:titleTextStyle">@style/ActionBar.Text</item>
+        <item name="android:background">#3cb371</item>
+    </style>
+
+    <style name="ActionBar.Text" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:ellipsize">start</item>
+    </style>
+
+    <style name="ActionBar.ArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#ffffff</item>
     </style>
 
 
