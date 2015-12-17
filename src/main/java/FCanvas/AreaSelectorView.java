@@ -51,6 +51,7 @@ public class AreaSelectorView {
         if(distance(x,y,x2,y1) - radius <= criticalradius) return 2;
         if(distance(x,y,x1,y2) - radius <= criticalradius) return 3;
         if(distance(x,y,x2,y2) - radius <= criticalradius) return 4;
+        if(x1 < x && x2 > x && y1 < y && y2 > y) return 5;
         return 0;
     }
 
@@ -69,7 +70,7 @@ public class AreaSelectorView {
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
-    public void setVertexPos(int which,float x,float y){
+    public void setPos(int which, float x, float y){
         switch (which){
             case 1:
                 x1 = x;
@@ -88,6 +89,12 @@ public class AreaSelectorView {
                 y2 = y;
                 break;
         }
+    }
+    public void movePos(float dx,float dy){
+        x1 += dx;
+        x2 += dx;
+        y1 += dy;
+        y2 += dy;
     }
 
     public float getX1(){

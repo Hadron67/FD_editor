@@ -10,11 +10,17 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,22 +32,26 @@ import FCanvas.FeynmanCanvas;
 import FCanvas.OnEditListener;
 import Physigraph.Diagram;
 import Views.ExportImageDialogue;
+import Views.HackyDrawerLayout;
+import Views.SlidingPaneLayout;
 import Views.ToolBox;
 import Views.ToolButton;
 
 
-public class DiagramEditActivity extends Activity {
-
-    public static final int RESCODE_SAVEFILE = 0;
-    public static final int RESCODE_OPENFILE = 1;
-    public static final int RESCODE_SAVEIMAGE = 2;
+public class DiagramEditActivity extends AppCompatActivity {
 
     private FeynmanCanvas sketch = null;
     private ToolButton btn_tool = null;
     private MenuItem undobutton = null;
     private MenuItem redobutton = null;
+    private ActionBarDrawerToggle mDrawerToggle = null;
+    private HackyDrawerLayout mDrawerLayout = null;
+    private LinearLayout mDrawer = null;
+    private SlidingPaneLayout mSlidingPane = null;
 
     private ToolBox tb = null;
+
+    private Toolbar mToolbar = null;
 
     private String savePath = "";
 
@@ -81,14 +91,21 @@ public class DiagramEditActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_editdiagram);
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         redobutton = (MenuItem) findViewById(R.id.command_redo);
         undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);
         this.sketch = (FeynmanCanvas) $(R.id.sketch);
+        mDrawerLayout = (HackyDrawerLayout) findViewById(R.id.drawer_main);
+        mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
+        mSlidingPane = (SlidingPaneLayout) findViewById(R.id.Pane1);
 
+
+        setSupportActionBar(mToolbar);
         tb = new ToolBox(this);
         tb.setFocusable(true);
 
+        initActionBar();
         sketch.setOnEditListener(new OnEditListener() {
             @Override
             public void onEdit(BasicCommand cmd) {
@@ -103,6 +120,10 @@ public class DiagramEditActivity extends Activity {
         });
 
         initFiles();
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,R.string.drawer_close){
+
+        };
     }
 
     @Override
@@ -113,12 +134,11 @@ public class DiagramEditActivity extends Activity {
     }
 
     private void initActionBar(){
-        ActionBar ab = getActionBar();
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
         if(ab == null) return;
-        ab = getActionBar();
-        ab.setTitle(getResources().getString(R.string.empty));
-        ab.setBackgroundDrawable(new ColorDrawable(Color.argb(255, 60, 179, 113)));
-        ab.show();
+
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
     }
 
     @Override
@@ -139,6 +159,11 @@ public class DiagramEditActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
+            case android.R.id.home:
+                if(slideDownAudioPlayer()){
+                    return true;
+                }
+                break;
             case R.id.command_undo:
                 if(sketch.canUndo()){
                     sketch.Undo();
@@ -153,6 +178,7 @@ public class DiagramEditActivity extends Activity {
                 sketch.clear();
                 break;
         }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         updateButtonStatus();
         return super.onOptionsItemSelected(item);
     }
@@ -160,6 +186,14 @@ public class DiagramEditActivity extends Activity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    public boolean slideDownAudioPlayer() {
+        if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
+        }
+        return false;
     }
 
     public View $(int id){

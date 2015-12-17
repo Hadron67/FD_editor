@@ -5,7 +5,7 @@
     <dimen name="toolbox_itemheight">50dip</dimen>
 
     <dimen name="areaselector_cornerradius">10dip</dimen>
-    <dimen name="areaselector_defaultpadding">50dip</dimen>
+    <dimen name="areaselector_defaultpadding">100dip</dimen>
     <dimen name="areaselctor_defaultwidth">200dip</dimen>
 
     <dimen name="picture_preview_width">200dip</dimen>

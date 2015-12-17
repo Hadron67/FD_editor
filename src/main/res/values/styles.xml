@@ -8,15 +8,17 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.FDeditor" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/ActionBar</item>
+    <style name="Theme.FDeditor" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarStyle">@style/ActionBar</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="android:actionModeBackground">@drawable/actionmode_background</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@drawable/actionmode_background</item>
 
         <item name="android:alertDialogStyle">@style/exportdialogue_style</item>
 
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
         <item name="colorPrimary">@color/primary_material_dark</item>
+
     </style>
 
     <style name="Theme.FDeditor.List" parent="android:Widget.AbsListView">
@@ -25,19 +27,19 @@
         <item name="android:dividerHeight">0dp</item>
     </style>
 
-    <style name="ActionBar" parent="android:Widget.ActionBar">
-        <item name="android:titleTextStyle">@style/ActionBar.Text</item>
-        <item name="android:background">#3cb371</item>
+    <style name="ActionBar" parent="Widget.AppCompat.Light.ActionBar">
+        <item name="titleTextStyle">@style/ActionBar.Text</item>
     </style>
 
     <style name="ActionBar.Text" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">#ffffff</item>
-        <item name="android:ellipsize">start</item>
     </style>
 
     <style name="ActionBar.ArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">#ffffff</item>
     </style>
+
+    <style name="Toolbar.FDeditor" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 
     <style name="tool_box_style" parent="android:Widget.ListPopupWindow">

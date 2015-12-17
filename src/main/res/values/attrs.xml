@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
+
+
     <declare-styleable name="LineView">
         <attr name="LineType" format="enum">
             <enum name="STRATE_LINE" value="0" />

@@ -14,8 +14,10 @@ import com.cfy.project2.DiagramEditActivity;
 import com.cfy.project2.FileNavigateActivity;
 import com.cfy.project2.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 
@@ -58,9 +60,14 @@ public class ExportImageDialogue extends Dialog{
                 Intent intent = new Intent(context, FileNavigateActivity.class);
                 intent.putExtra("path",savePath);
                 intent.putExtra("saveFile",true);
-                intent.putExtra("RequestCode", DiagramEditActivity.RESCODE_SAVEIMAGE);
-                context.startActivity(intent);
-                dismiss();
+                try {
+                    intent.putExtra("Data",getImageBytes(ExportImageDialogue.this.img));
+                    intent.putExtra("extensionName","jpg");
+                    context.startActivity(intent);
+                    dismiss();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -91,8 +98,14 @@ public class ExportImageDialogue extends Dialog{
     }
     private void saveImage(File destfile) throws Exception{
         OutputStream os = new FileOutputStream(destfile);
-        img.compress(Bitmap.CompressFormat.JPEG,100,os);
+        img.compress(Bitmap.CompressFormat.JPEG, 100, os);
         os.close();
     }
 
+    private byte[] getImageBytes(Bitmap bitmap) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.JPEG, 100, os);
+        os.close();
+        return os.toByteArray();
+    }
 }

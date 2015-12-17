@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -45,7 +46,7 @@ public class FeynmanCanvas extends View{
 
     private boolean isSettingRadius = false;
 
-    private int selectedSelectorAreaVertex = 0;
+    private int selectedSelectorAreaType = 0;
 
     private float oldradius;
 
@@ -149,6 +150,8 @@ public class FeynmanCanvas extends View{
 
                 float[] coordinate = drawingSketch.getNearestPoint(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
                 FVertex vertex = fdiagram.getNearestVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
+
+                boolean result = false;
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         switch (mode) {
@@ -185,7 +188,7 @@ public class FeynmanCanvas extends View{
                                     fdiagram.Deselect();
                                 break;
                             case SELECT_AREA:
-                                selectedSelectorAreaVertex = areaselector.hitTest(event.getX(),event.getY(),Lattice.POINT_RADIUS * 2f);
+                                selectedSelectorAreaType = areaselector.hitTest(event.getX(),event.getY(),Lattice.POINT_RADIUS * 2f);
                                 break;
                         }
                         break;
@@ -208,7 +211,16 @@ public class FeynmanCanvas extends View{
                                 FeynmanCanvas.this.update();
                                 break;
                             case SELECT_AREA:
-                                areaselector.setVertexPos(selectedSelectorAreaVertex,event.getX(),event.getY());
+                                areaselector.setPos(selectedSelectorAreaType, event.getX(), event.getY());
+                                if(selectedSelectorAreaType == 5){
+                                    int hs = event.getHistorySize();
+                                    if(hs <=0){
+                                        Log.e("in OnTouch","Bug Detected in coordinate history");
+                                    }
+                                    else {
+                                        areaselector.movePos(event.getX() - event.getHistoricalX(0), event.getY() - event.getHistoricalY(0));
+                                    }
+                                }
                                 FeynmanCanvas.this.update();
                                 break;
                         }
@@ -231,7 +243,7 @@ public class FeynmanCanvas extends View{
                             isSettingRadius = false;
                             cmdmgr.add(new SetLineRadiusCommand(selectedLine, oldradius));
                         }
-                        selectedSelectorAreaVertex = 0;
+                        selectedSelectorAreaType = 0;
                         return false;
                     default:
                 }

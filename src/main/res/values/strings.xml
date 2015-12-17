@@ -43,4 +43,7 @@
     <string name="text_parentdirectory">..</string>
 
     <string name="hint_when_file_exists">File exists.Would you like to replace it ?</string>
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
 </resources>
