@@ -28,6 +28,11 @@ public class FileListAdapter extends BaseAdapter{
     private boolean limited = false;
     private String top = null;
 
+    public class ViewHolder{
+        ImageView img;
+        TextView text;
+    }
+
     private final Handler mhandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -106,11 +111,20 @@ public class FileListAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
         if(convertView == null){
             convertView = LayoutInflater.from(ctx).inflate(R.layout.layout_filelistitem,null);
+            holder = new ViewHolder();
+            holder.text = (TextView) convertView.findViewById(R.id.textview_filename);
+            holder.img = (ImageView) convertView.findViewById(R.id.imgview_file);
+            convertView.setTag(holder);
         }
-        ImageView ic_file = (ImageView) convertView.findViewById(R.id.imgview_file);
-        TextView text_name = (TextView) convertView.findViewById(R.id.textview_filename);
+        else{
+            holder = (ViewHolder) convertView.getTag();
+        }
+        ImageView ic_file = holder.img;
+        TextView text_name = holder.text;
 
         File f = files.get(position);
         String name;
@@ -121,7 +135,10 @@ public class FileListAdapter extends BaseAdapter{
             name = f.getName();
         }
         text_name.setText(name);
-        if(f.isDirectory()){
+        if(position == 0 && hasParent){
+            ic_file.setImageResource(R.mipmap.ic_parentdirectory);
+        }
+        else if(f.isDirectory()){
             ic_file.setImageResource(R.mipmap.ic_folder);
         }
         else{

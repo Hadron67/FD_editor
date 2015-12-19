@@ -22,11 +22,11 @@ public class PhotonLine extends FLine{
 
     public PhotonLine(float x1,float y1,float x2,float y2){
         super(x1,y1,x2,y2);
-        amplitude = 14;
-        period_divizer = 40;
+        amplitude = 10;
+        period_divizer = 30;
         acurraty = 80;
 
-        selector_width = 19;
+        selector_width = amplitude + lineWidth;
     }
     @Override
     protected void GeneratePath(){

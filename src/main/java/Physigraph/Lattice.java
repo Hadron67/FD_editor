@@ -9,7 +9,7 @@ import com.cfy.project2.BuildConfig;
  * Created by cfy on 15-11-19.
  */
 public class Lattice {
-    public static final float POINT_RADIUS = 10;
+    public static final float POINT_RADIUS = 5;
     protected float k1,k2,k3,k4,a = 0,b = 0;
     protected float scale = 1;
 

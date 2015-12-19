@@ -10,8 +10,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,7 +38,7 @@ import java.util.Comparator;
 /**
  * Created by cfy on 15-12-11.
  */
-public class FileNavigateActivity extends Activity{
+public class FileNavigateActivity extends AppCompatActivity{
 
     private enum Type{
         SAVEFILE,OPENFILE
@@ -47,6 +50,7 @@ public class FileNavigateActivity extends Activity{
     private EditText filename = null;
     private Button btn_enter = null;
     private TextView text_path = null;
+    private Toolbar mToolbar = null;
 
     private String fileExtensionName;
 
@@ -58,15 +62,17 @@ public class FileNavigateActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDatas();
         this.setContentView(R.layout.layout_file_navigator);
-        initActionBar();
 
         filelist = (ListView) findViewById(R.id.listview_filelist);
         filename = (EditText) findViewById(R.id.edittext_filename);
         btn_enter = (Button) findViewById(R.id.btn_enter);
         text_path = (TextView) findViewById(R.id.text_path);
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+        initActionbar();
 
-        getDatas();
 
         filename.setText("untitled." + fileExtensionName);
         filename.setSelection(0,8);
@@ -100,7 +106,7 @@ public class FileNavigateActivity extends Activity{
                         final String name = filename.getText().toString();
                         final File f = new File(navigatingPath + "/" + name);
                         if(name.equals("")){
-                            Toast.makeText(FileNavigateActivity.this,"enter file name",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FileNavigateActivity.this,getString(R.string.enter_fille_name),Toast.LENGTH_SHORT).show();
                         }
                         else if(f.exists()){
                             new AlertDialog.Builder(FileNavigateActivity.this)
@@ -130,8 +136,31 @@ public class FileNavigateActivity extends Activity{
                 });
                 break;
         }
+    }
 
+    private void initActionbar(){
+        android.support.v7.app.ActionBar a = getSupportActionBar();
+        a.setHomeButtonEnabled(true);
+        a.setDisplayHomeAsUpEnabled(true);
+        switch (type){
+            case SAVEFILE:
+                a.setTitle(R.string.save_file);
+                break;
+            case OPENFILE:
+                a.setTitle(R.string.open_file);
+                break;
+        }
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private File getPath(){

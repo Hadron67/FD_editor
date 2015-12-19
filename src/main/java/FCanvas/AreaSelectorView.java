@@ -97,6 +97,12 @@ public class AreaSelectorView {
         y2 += dy;
     }
 
+    public void rescale(float scale,float cx,float cy){
+        x1 = (x1 - cx) * scale + cx;
+        x2 = (x2 - cx) * scale + cx;
+        y1 = (y1 - cy) * scale + cy;
+        y2 = (y2 - cy) * scale + cy;
+    }
     public float getX1(){
         return x1;
     }

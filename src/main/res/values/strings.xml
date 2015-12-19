@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project2</string>
+    <string name="app_name">FDeditor</string>
 
     <string name="action_settings">Tool</string>
     <string name="command_undo">Undo</string>
@@ -45,5 +45,13 @@
     <string name="hint_when_file_exists">File exists.Would you like to replace it ?</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
+
+    <string name="save_file">Save file</string>
+    <string name="open_file">Open file</string>
+    <string name="enter_fille_name">Enter file name</string>
+
+    <string name="text_about">About</string>
+    <string name="text_documentations">Documentations</string>
+    <string name="text_feynman_rule">Feynman Rule</string>
 
 </resources>

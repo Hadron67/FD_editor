@@ -12,8 +12,8 @@ public class GluonLine extends FLine{
 
     public GluonLine(float x1, float y1, float x2, float y2) {
         super(x1, y1, x2, y2);
-        amplitude = 15;
-        period_divizer = 40;
+        amplitude = 10;
+        period_divizer = 30;
         acurraty = 50;
 
         selector_width = 2 * amplitude + lineWidth / 2;

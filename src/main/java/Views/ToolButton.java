@@ -24,7 +24,7 @@ public class ToolButton extends View {
     private boolean disabled = false;
     //private Path path_photon,path_arrow;
     public enum ButtonShape{
-        LINE,LINE_ARROW,DASHED,DASHED_ARROW,PHOTON,NORMALVERTEX,COUNTERVERTEX,GLUON,DOUBLELINE,ARROWEDDOUBLELINE,CHOOSE,SELECT
+        LINE,LINE_ARROW,DASHED,DASHED_ARROW,PHOTON,NORMALVERTEX,COUNTERVERTEX,GLUON,DOUBLELINE,ARROWEDDOUBLELINE,CHOOSE,SELECT,ARROW
     }
     public ToolButton(Context ctx,AttributeSet attr){
         super(ctx,attr);
@@ -110,6 +110,9 @@ public class ToolButton extends View {
             case SELECT:
                 draw_select(canvas);
                 break;
+            case ARROW:
+                draw_rightArrow(canvas);
+                break;
             default:;
         }
 
@@ -190,6 +193,13 @@ public class ToolButton extends View {
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 - 20, linepaint);
         canvas.drawLine(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth() / 2 - 20, canvas.getHeight() / 2 + 20, linepaint);
     }
+    protected void draw_rightArrow(Canvas canvas){
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+        canvas.drawLine(width / 4,height / 2,width * 3 / 4,height / 2,linepaint);
+        canvas.drawLine(width / 2,height / 4,width * 3 / 4,height / 2,linepaint);
+        canvas.drawLine(width / 2,height * 3 / 4,width * 3 / 4,height / 2,linepaint);
+    }
     protected void dashedLine(Canvas canvas,float x1,float y1,float x2,float y2,int seg){
         for(float i = 0;i <= 2*seg - 2;i+=2){
             canvas.drawLine(x1 + (i/2/seg) * (x2 - x1),y1 + (i/2/seg) * (y2 - y1),x1 + ((i+1)/2/seg) * (x2 - x1),y1 + ((i+1)/2/seg) * (y2 - y1),linepaint);
@@ -213,7 +223,24 @@ public class ToolButton extends View {
         setClickable(true);
         postInvalidate();
     }
+    public ButtonShape getShape(){
+        return shape_btn;
+    }
     private void initPaths(){
 
+    }
+
+    private int measureHanlder(int measureSpec){
+        int result = 60;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        if (specMode == MeasureSpec.EXACTLY) {
+            result = specSize;
+        } else if (specMode == MeasureSpec.AT_MOST) {
+            result = Math.min(60, specSize);
+        } else {
+            result = 60;
+        }
+        return result;
     }
 }

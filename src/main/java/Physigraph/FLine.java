@@ -42,21 +42,21 @@ public class FLine implements Cloneable,Selectable{
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.lineWidth = 3;
         this.radius = 0;
         this.isArc = false;
         this.mpaint = new Paint();
         mpaint.setStyle(Paint.Style.STROKE);
         mpaint.setARGB(255, 0, 0, 0);
-        mpaint.setStrokeWidth(6);
+        mpaint.setStrokeWidth(lineWidth);
         mpaint.setAntiAlias(true);
 
         this.labelPaint = new Paint();
         labelPaint.setTextSize(40);
         labelPaint.setARGB(255, 0, 0, 0);
         labelPaint.setAntiAlias(true);
-        this.lineWidth = 6;
 
-        selector_width = 18;
+        selector_width = 12;
 
         this.Label = "";
         this.LabelPosX = 0;

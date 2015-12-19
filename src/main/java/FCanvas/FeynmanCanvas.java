@@ -81,31 +81,36 @@ public class FeynmanCanvas extends View{
         DRAW_LINE,DRAW_VERTEX,CHOOSE,MOVE,SELECT_AREA
     }
     private class ScaleListener implements ScaleGestureDetector.OnScaleGestureListener {
-        private float  newscale;
+        private float  newscale,lastscale;
         private float zoomx, zoomy;
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             newscale = detector.getScaleFactor();
-            drawingSketch.rescale(newscale,detector.getFocusX(), detector.getFocusY());
-            fdiagram.rescale(newscale, detector.getFocusX(), detector.getFocusY());
+            float cx = detector.getFocusX();
+            float cy = detector.getFocusY();
+            drawingSketch.rescale(newscale,cx, cy);
+            fdiagram.rescale(newscale,cx, cy);
+            rescaleAreaSelector(newscale,cx, cy);
             if (drawingSketch.getScale() > 2 || drawingSketch.getScale() < 0.5) {
-                drawingSketch.rescale(1 / newscale, detector.getFocusX(), detector.getFocusY());
-                fdiagram.rescale(1 / newscale,detector.getFocusX(), detector.getFocusY());
+                drawingSketch.rescale(1 / newscale, cx, cy);
+                fdiagram.rescale(1 / newscale,cx, cy);
+                rescaleAreaSelector(1 / newscale,cx, cy);
             }
-            drawingSketch.moveCentre(detector.getFocusX() - zoomx, detector.getFocusY() - zoomy);
-            fdiagram.moveOrigin(detector.getFocusX() - zoomx,detector.getFocusY() - zoomy);
+            drawingSketch.moveCentre(cx - zoomx, cy - zoomy);
+            fdiagram.moveOrigin(cx - zoomx, cy - zoomy);
+            moveAreaSelector(cx - zoomx,cy - zoomy);
             zoomx = detector.getFocusX();
             zoomy = detector.getFocusY();
             FeynmanCanvas.this.update();
-            //lastscale = newscale;
+            lastscale = newscale;
             return true;
         }
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             //zooming = true;
-            //lastscale = newscale = 1;
+            lastscale = newscale = 1;
             zoomx = detector.getFocusX();
             zoomy = detector.getFocusY();
 
@@ -132,7 +137,7 @@ public class FeynmanCanvas extends View{
         this.cmdmgr = new CommandManager(this);
 
         this.zoomDetector = new ScaleGestureDetector(this.getContext(), new ScaleListener());
-        this.drawingSketch = new Lattice(250, 0, 125f, -125f * (float) Math.sqrt(3));
+        this.drawingSketch = new Lattice(125, 0, 62.5f, -62.5f * (float) Math.sqrt(3));
         this.drawingSketch.moveCentre(this.getWidth() / 2, this.getHeight() / 2);
 
         this.fdiagram = new Diagram();
@@ -148,8 +153,8 @@ public class FeynmanCanvas extends View{
                 FeynmanCanvas.this.zoomDetector.onTouchEvent(event);
                 if (FeynmanCanvas.this.zoomDetector.isInProgress()) return true;
 
-                float[] coordinate = drawingSketch.getNearestPoint(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
-                FVertex vertex = fdiagram.getNearestVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
+                float[] coordinate = drawingSketch.getNearestPoint(event.getX(), event.getY(), Lattice.POINT_RADIUS * 4f);
+                FVertex vertex = fdiagram.getNearestVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 4f);
 
                 boolean result = false;
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
@@ -173,16 +178,16 @@ public class FeynmanCanvas extends View{
                                 }
                                 break;
                             case CHOOSE:
-                                if (linesetter.Touched(event.getX(), event.getY(), 80)) {
+                                if (linesetter.Touched(event.getX(), event.getY(), 110)) {
                                     isSettingRadius = true;
                                     oldradius = selectedLine.getRadiusVector();
                                     return true;
                                 }
-                                selectedLine = fdiagram.selectLine(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
+                                selectedLine = fdiagram.selectLine(event.getX(), event.getY(), Lattice.POINT_RADIUS * 4f);
                                 linesetter.setLine(selectedLine);
                                 if (selectedLine == null) {
                                     linesetter.setLine(null);
-                                    selectedVertex = fdiagram.selectVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 2f);
+                                    selectedVertex = fdiagram.selectVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 4f);
                                 }
                                 if (selectedLine == null && selectedVertex == null)
                                     fdiagram.Deselect();
@@ -245,6 +250,18 @@ public class FeynmanCanvas extends View{
                         }
                         selectedSelectorAreaType = 0;
                         return false;
+                    case MotionEvent.ACTION_CANCEL:
+                        switch(mode){
+                            case DRAW_LINE:
+                                if(currentLine != null){
+                                    fdiagram.DeleteLine(currentLine);
+                                    currentLine = null;
+                                }
+                                break;
+                        }
+                        Log.d("in ontouch","event cancelled.");
+                        FeynmanCanvas.this.update();
+                        break;
                     default:
                 }
                 return false;
@@ -343,6 +360,16 @@ public class FeynmanCanvas extends View{
                 refreshAllowed = true;
             }
         }, 20);
+    }
+    private void rescaleAreaSelector(float scale,float x,float y){
+        if(mode == EditType.SELECT_AREA){
+            areaselector.rescale(scale,x,y);
+        }
+    }
+    private void moveAreaSelector(float dx,float dy){
+        if(mode == EditType.SELECT_AREA){
+            areaselector.movePos(dx,dy);
+        }
     }
 
     private PopupMenu getLineOperationsMenu(){

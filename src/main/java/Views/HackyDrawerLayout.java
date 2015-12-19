@@ -11,11 +11,11 @@ import android.view.MotionEvent;
 public class HackyDrawerLayout extends DrawerLayout {
 
     public HackyDrawerLayout(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public HackyDrawerLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public HackyDrawerLayout(Context context, AttributeSet attrs, int defStyle) {
@@ -30,5 +30,10 @@ public class HackyDrawerLayout extends DrawerLayout {
             t.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        return super.onTouchEvent(ev);
     }
 }

@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/command_undo"
         android:title="@string/command_undo"
-        android:orderInCategory="3"
-        android:icon="@mipmap/ic_undo"
+        android:orderInCategory="2"
+        android:icon="@drawable/ic_undo"
         app:showAsAction="always" />
     <item
         android:id="@+id/command_redo"
         android:title="@string/command_redo"
-        android:orderInCategory="2"
-        android:icon="@mipmap/ic_redo"
+        android:orderInCategory="3"
+        android:icon="@drawable/ic_redo"
         app:showAsAction="always"/>
     <item
         android:id="@+id/command_clear"

@@ -22,7 +22,7 @@ public class FVertex implements Selectable{
     public FVertex(float x,float y){
         this.x = x;
         this.y = y;
-        radius = 10;
+        radius = 4;
         mpaint = new Paint();
         mpaint.setARGB(255,0,0,0);
         mpaint.setStyle(Paint.Style.FILL);

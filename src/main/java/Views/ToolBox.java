@@ -31,7 +31,7 @@ import Physigraph.FLine;
 public class ToolBox extends PopupWindow{
 
     public ToolBox(Context ctx){
-        super(ctx, null, R.attr.popupWindowStyle, R.style.tool_box_style);
+        super(ctx, null, R.attr.popupWindowStyle, R.style.Theme_FDeditor_PopupWindow);
         ViewGroup vg = (ViewGroup) LayoutInflater.from(ctx).inflate(R.layout.layout_toolbox,null);
         super.setContentView(vg);
         setWidth(ctx.getResources().getDimensionPixelSize(R.dimen.toolbox_width));

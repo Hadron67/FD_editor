@@ -1,36 +1,28 @@
 package com.cfy.project2;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 import FCanvas.BasicCommand;
 import FCanvas.FeynmanCanvas;
 import FCanvas.OnEditListener;
-import Physigraph.Diagram;
+import Views.DrawerIndicator;
 import Views.ExportImageDialogue;
 import Views.HackyDrawerLayout;
 import Views.SlidingPaneLayout;
@@ -38,7 +30,7 @@ import Views.ToolBox;
 import Views.ToolButton;
 
 
-public class DiagramEditActivity extends AppCompatActivity {
+public class DiagramEditActivity extends AppCompatActivity implements OnItemClickListener{
 
     private FeynmanCanvas sketch = null;
     private ToolButton btn_tool = null;
@@ -46,8 +38,12 @@ public class DiagramEditActivity extends AppCompatActivity {
     private MenuItem redobutton = null;
     private ActionBarDrawerToggle mDrawerToggle = null;
     private HackyDrawerLayout mDrawerLayout = null;
-    private LinearLayout mDrawer = null;
     private SlidingPaneLayout mSlidingPane = null;
+    private ListView mSlidingDrawer = null;
+    private SlidingListAdapter DrawerAdapter = null;
+    private ActionMode mActionMode = null;
+
+    private DrawerIndicator mDrawerIndicator = null;
 
     private ToolBox tb = null;
 
@@ -59,6 +55,7 @@ public class DiagramEditActivity extends AppCompatActivity {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.menu_main_export_image,menu);
+            mActionMode = mode;
             return true;
         }
 
@@ -83,22 +80,29 @@ public class DiagramEditActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            btn_tool.Enable();
             selectToStraightLine(null);
+            mActionMode = null;
         }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_editdiagram);
+        mDrawerIndicator = new DrawerIndicator();
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         redobutton = (MenuItem) findViewById(R.id.command_redo);
         undobutton = (MenuItem) findViewById(R.id.command_undo);
         this.btn_tool = (ToolButton) $(R.id.btn_tool);
         this.sketch = (FeynmanCanvas) $(R.id.sketch);
         mDrawerLayout = (HackyDrawerLayout) findViewById(R.id.drawer_main);
-        mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
+        mSlidingDrawer = (ListView) findViewById(R.id.main_drawer);
         mSlidingPane = (SlidingPaneLayout) findViewById(R.id.Pane1);
+
+
+        DrawerAdapter = new SlidingListAdapter(this);
+        mSlidingDrawer.setAdapter(DrawerAdapter);
+        mSlidingDrawer.setOnItemClickListener(this);
+
 
 
         setSupportActionBar(mToolbar);
@@ -115,15 +119,24 @@ public class DiagramEditActivity extends AppCompatActivity {
         btn_tool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(mActionMode != null){
+                    mActionMode.finish();
+                }
                 tb.showAsDropDown(btn_tool, -tb.getWidth(), -tb.getHeight());
             }
         });
 
         initFiles();
 
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,R.string.drawer_close){
+//        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,R.string.drawer_close){
+//            @Override
+//            public void onDrawerSlide(View drawerView, float slideOffset) {
+//                super.onDrawerSlide(drawerView, slideOffset);
+//                Log.d("drawer moved",Float.toString(slideOffset));
+//            }
+//        };
+        mDrawerLayout.setDrawerListener(mDrawerIndicator);
 
-        };
     }
 
     @Override
@@ -139,6 +152,7 @@ public class DiagramEditActivity extends AppCompatActivity {
 
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
+        ab.setHomeAsUpIndicator(mDrawerIndicator);
     }
 
     @Override
@@ -160,7 +174,7 @@ public class DiagramEditActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
             case android.R.id.home:
-                if(slideDownAudioPlayer()){
+                if(OpenDrawer()){
                     return true;
                 }
                 break;
@@ -188,7 +202,7 @@ public class DiagramEditActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    public boolean slideDownAudioPlayer() {
+    public boolean OpenDrawer() {
         if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
@@ -215,6 +229,11 @@ public class DiagramEditActivity extends AppCompatActivity {
         return result;
     }
 
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
 
     public void selectToStraightLine(View v){
         sketch.setEditType(FeynmanCanvas.EditType.DRAW_LINE);
@@ -295,7 +314,7 @@ public class DiagramEditActivity extends AppCompatActivity {
     public void selectToSelectMode(View v){
         sketch.setEditType(FeynmanCanvas.EditType.SELECT_AREA);
         btn_tool.setShape(ToolButton.ButtonShape.SELECT);
-        btn_tool.Disable();
+        //btn_tool.Disable();
         startActionMode(selectareacallback);
         tb.dismiss();
     }

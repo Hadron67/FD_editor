@@ -17,8 +17,8 @@ public class ArrowedLine extends FLine{
     public ArrowedLine(float x1,float y1,float x2,float y2){
         super(x1,y1,x2,y2);
         arrowPosition = 0.5f;
-        arrowHeight = 10f;
-        arrowWidth = 20;
+        arrowHeight = 5f;
+        arrowWidth = 10;
     }
 
     @Override
