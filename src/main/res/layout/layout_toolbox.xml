@@ -10,21 +10,21 @@
         android:layout_height="match_parent"
         android:stretchColumns="*">
         <TableRow>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
                 android:clickable="true"
                 android:onClick="selectToStraightLine"
                 app:LineType="STRATE_LINE"/>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
                 android:clickable="true"
                 android:onClick="selectToDashedLine"
                 app:LineType="DASHED_LINE"/>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
@@ -33,21 +33,21 @@
                 app:LineType="DOUBLE_LINE"/>
         </TableRow>
         <TableRow>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
                 android:clickable="true"
                 android:onClick="selectToArrowedLine"
                 app:LineType="ARROWED_STRATE_LINE"/>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
                 android:clickable="true"
                 android:onClick="selectToArrowedDashedLine"
                 app:LineType="ARROWED_DASHED_LINE"/>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
@@ -56,21 +56,21 @@
                 app:LineType="ARROWED_DOUBLE_LINE"/>
         </TableRow>
         <TableRow>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
                 android:clickable="true"
                 android:onClick="selectToPhotonLine"
                 app:LineType="PHOTON_LINE"/>
-            <Views.LineView
+            <views.LineView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
                 android:clickable="true"
                 android:onClick="selectToGluonLine"
                 app:LineType="GLUON_LINE"/>
-            <Views.VertexView
+            <views.VertexView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"
@@ -80,7 +80,7 @@
                 />
         </TableRow>
         <TableRow>
-            <Views.VertexView
+            <views.VertexView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/toolbox_itemheight"
                 android:background="@drawable/toolbox_item_background"

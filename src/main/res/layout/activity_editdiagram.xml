@@ -2,13 +2,13 @@
 <merge>
 
 
-<Views.HackyDrawerLayout
+<views.HackyDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:id="@+id/drawer_main"
     >
-        <Views.SlidingPaneLayout
+        <views.SlidingPaneLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/Pane1"
@@ -21,13 +21,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     >
-                    <FCanvas.FeynmanCanvas
+                    <fcanvas.FeynmanCanvas
                         android:id="@+id/sketch"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
                 </FrameLayout>
-                <Views.ToolButton
+                <views.ToolButton
                     android:layout_width="70dip"
                     android:layout_height="70dip"
                     android:layout_alignParentBottom="true"
@@ -40,7 +40,7 @@
 
             </RelativeLayout>
 
-        </Views.SlidingPaneLayout>
+        </views.SlidingPaneLayout>
 
         <ListView
             android:layout_width="240dip"
@@ -54,7 +54,7 @@
             >
         </ListView>
 
-    </Views.HackyDrawerLayout>
+    </views.HackyDrawerLayout>
     <include
         layout="@layout/toolbar" />
 </merge>
