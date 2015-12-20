@@ -22,7 +22,7 @@ public class SplitLineCommand extends BasicCommand{
         try {
             Constructor<? extends FLine> lineConstructor = originLine.getClass().getConstructor();
             FVertex lastvertex = originLine.getStartVertex();
-            if(!originLine.IsArc()) {
+            if(originLine.IsLine()) {
                 for (float i = 1; i <= segs; i++) {
                     float x = originLine.getStartVertex().getX() * (1 - i / segs) + originLine.getEndVertex().getX() * i / segs;
                     float y = originLine.getStartVertex().getY() * (1 - i / segs) + originLine.getEndVertex().getY() * i / segs;
@@ -49,8 +49,8 @@ public class SplitLineCommand extends BasicCommand{
 
                     float angle = mtheta * i/segs;
 
-                    float x = vectorX * (float)Math.cos(angle) + vectorY * (float)Math.sin(mtheta) + c[0];
-                    float y =-vectorX * (float)Math.sin(angle) + vectorY * (float)Math.cos(mtheta) + c[1];
+                    float x = vectorX * (float)Math.cos(angle) + vectorY * (float)Math.sin(angle) + c[0];
+                    float y =-vectorX * (float)Math.sin(angle) + vectorY * (float)Math.cos(angle) + c[1];
 
                     FVertex newvertex = i != segs ? new FVertex(x, y) : originLine.getEndVertex();
                     if (i != segs) newvertices.add(newvertex);

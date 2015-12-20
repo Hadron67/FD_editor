@@ -47,6 +47,16 @@ public class DoubleLine extends FLine{
 
                 break;
             case LOOP:
+                radius = (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                centreX = x1 + arcVectorX;
+                centreY = y1 + arcVectorY;
+                vectorX = x1 - centreX;
+                vectorY = y1 - centreY;
+                mtheta = (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,this.radius);
+                p.moveTo(x1,y1);
+                drawArc(p, centreX, centreY, vectorX * (1 + width / radius), vectorY * (1 + width / radius), mtheta, (int) Math.ceil(radius * mtheta / 20), false);
+                p.moveTo(x1,y1);
+                drawArc(p, centreX, centreY, vectorX * (1 - width / radius), vectorY * (1 - width / radius), mtheta, (int) Math.ceil(radius * mtheta / 20), false);
 
                 break;
         }

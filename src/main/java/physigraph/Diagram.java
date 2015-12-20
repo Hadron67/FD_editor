@@ -145,8 +145,10 @@ public class Diagram {
 
     public void DeleteVertexWithLines(FVertex vertex){
         for(FLine a : vertex.lines){
-            FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
-            anotherVertex.lines.remove(a);
+            if(!a.IsLoop()) {
+                FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
+                anotherVertex.lines.remove(a);
+            }
             this.lines.remove(a);
         }
         vertices.remove(vertex);
@@ -157,8 +159,10 @@ public class Diagram {
 
     public void AddVertexWithLines(FVertex vertex){
         for(FLine a : vertex.lines){
-            FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
-            anotherVertex.lines.add(a);
+            if(!a.IsLoop()) {
+                FVertex anotherVertex = a.v1 == vertex ? a.v2 : a.v1;
+                anotherVertex.lines.add(a);
+            }
             this.lines.add(a);
         }
         vertices.add(vertex);

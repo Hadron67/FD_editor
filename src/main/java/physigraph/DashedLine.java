@@ -46,7 +46,20 @@ public class DashedLine extends FLine{
 
                 break;
             case LOOP:
-
+                radius = (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                centreX = x1 + arcVectorX;
+                centreY = y1 + arcVectorY;
+                vectorX = x1 - centreX;
+                vectorY = y1 - centreY;
+                mtheta = (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,this.radius);
+                l = (int)Math.ceil(2 * radius * mtheta / seglength) / 2;
+                p.moveTo(x1, y1);
+                for(float i = 0;i <= 2 * l - 2;i += 2){
+                    float phase1 = i/l / 2 * mtheta;
+                    float phase2 = (i + 1)/l / 2 * mtheta;
+                    p.moveTo(centreX + vectorX * (float)Math.cos(phase1) + vectorY * (float)Math.sin(phase1),centreY - vectorX * (float)Math.sin(phase1) + vectorY * (float)Math.cos(phase1));
+                    p.lineTo(centreX + vectorX * (float)Math.cos(phase2) + vectorY * (float)Math.sin(phase2),centreY - vectorX * (float)Math.sin(phase2) + vectorY * (float)Math.cos(phase2));
+                }
                 break;
         }
     }

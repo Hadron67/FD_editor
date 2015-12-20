@@ -34,27 +34,33 @@ public class LineRadiusSetter {
 
     public void update(){
         if(this.line == null) return;
-        if(line.IsArc()) {
+        if(!line.IsLine()) {
             float[] c = line.getCentre();
             this.x = c[0] * diag.scale + diag.originx;
             this.y = c[1] * diag.scale + diag.originy;
         }
     }
     public boolean Touched(float x,float y,float critical){
-        return this.line != null && line.IsArc() && Math.sqrt((x - this.x) * (x - this.x) - (y - this.y) * (y - this.y)) - raduis <=critical;
+        return this.line != null && !line.IsLine() && Math.sqrt((x - this.x) * (x - this.x) + (y - this.y) * (y - this.y)) - raduis <=critical;
     }
     public void setLine(FLine line){
         this.line = line;
         this.update();
     }
     public boolean hasLine(){
-        return line != null && line.IsArc();
+        return line != null && !line.IsLine();
     }
 
     public void setRadiusByCoordinates(float x, float y){
-        float distance = (float)Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1)) * diag.scale;
-        float prj = ((line.y1 - line.y2) * (x - this.x) + (line.x2 - line.x1) * (y - this.y)) / distance;
-        line.radius += prj;
+        if(line.IsArc()) {
+            float distance = (float) Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1)) * diag.scale;
+            float prj = ((line.y1 - line.y2) * (x - this.x) + (line.x2 - line.x1) * (y - this.y)) / distance;
+            line.radius += prj;
+        }
+        else{
+            line.arcVectorX = (x - diag.originx) / diag.scale - line.x1;
+            line.arcVectorY = (y - diag.originy) / diag.scale - line.y1;
+        }
         line.refresh();
         update();
     }

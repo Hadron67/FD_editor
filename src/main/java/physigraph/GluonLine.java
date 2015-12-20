@@ -71,7 +71,28 @@ public class GluonLine extends FLine{
 
                 break;
             case LOOP:
+                radius = (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                mtheta = (float)Math.PI * 2;
+                centreX = x1 + arcVectorX;
+                centreY = y1 + arcVectorY;
 
+                periods = (float) Math.ceil(mtheta * radius / period_divizer);
+                uvectorX = (x1 - centreX) / radius;
+                uvectorY = (y1 - centreY) / radius;
+
+                l = acurraty * mtheta * radius / period_divizer;
+                p.moveTo(x1,y1);
+
+                for(float i = 0;i <= l;i++){
+                    float phase = i/l * (2 * (float)Math.PI * periods + mtheta);
+                    float angle = i/l * mtheta;
+                    float vectorX = uvectorX * (float)Math.cos(angle) + uvectorY * (float)Math.sin(angle);
+                    float vectorY = -uvectorX * (float)Math.sin(angle) + uvectorY * (float)Math.cos(angle);
+                    float tX = uvectorX * (float)Math.cos(phase) + uvectorY * (float)Math.sin(phase);
+                    float tY =-uvectorX * (float)Math.sin(phase) + uvectorY * (float)Math.cos(phase);
+
+                    p.lineTo(centreX + vectorX * (radius - amplitude) + tX * amplitude,centreY + vectorY * (radius - amplitude) + tY * amplitude);
+                }
                 break;
         }
     }

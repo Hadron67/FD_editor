@@ -68,7 +68,26 @@ public class PhotonLine extends FLine{
 
                 break;
             case LOOP:
+                radius = (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                mtheta = (float)Math.PI * 2;
+                centreX = x1 + arcVectorX;
+                centreY = y1 + arcVectorY;
 
+                periods = Math.round(mtheta * radius / period_divizer);
+                uvectorX = (x1 - centreX) / radius;
+                uvectorY = (y1 - centreY) / radius;
+
+                l = acurraty * mtheta * radius / period_divizer;
+                p.moveTo(x1,y1);
+                for(float i = 0;i <= l;i++){
+                    float phase = i/l * (float)Math.PI * 2 * periods;
+                    float angle = i/l * mtheta;
+                    float uvectorX2 = uvectorX * (float)Math.cos(angle) + uvectorY * (float)Math.sin(angle);
+                    float uvectorY2 =-uvectorX * (float)Math.sin(angle) + uvectorY * (float)Math.cos(angle);
+
+                    p.lineTo(centreX + uvectorX2 * (radius + amplitude * (float)Math.sin(phase)),centreY + uvectorY2 * (radius + amplitude * (float)Math.sin(phase)));
+
+                }
                 break;
         }
     }

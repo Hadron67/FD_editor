@@ -14,8 +14,8 @@ public class DeleteLineCommand extends BasicCommand{
     }
     @Override
     protected void Do(FeynmanCanvas fcanvas) {
-
         fcanvas.fdiagram.DeleteLineFromVertices(deletedLine);
+
     }
 
     @Override

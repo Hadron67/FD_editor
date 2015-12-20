@@ -29,9 +29,11 @@ public class FLine implements Cloneable,Selectable{
     //this parametre only make sense when isArc = true
     protected float radius;
 
-    //when (x1,y1) = (x2,y2),these two parametres works.
-    protected float arcVectorX;
-    protected float arcVectorY;
+    //when (x1,y1) = (x2,y2),these three parametres works.
+    protected float arcVectorX = 0;
+    protected float arcVectorY = 50;
+    protected boolean ACW = false;
+
     protected float x1,y1,x2,y2;
 
     protected Paint mpaint;
@@ -53,7 +55,7 @@ public class FLine implements Cloneable,Selectable{
 
         this.lineWidth = 3;
         this.radius = 0;
-        //this.isArc = false;
+
         shape = LineShape.LINE;
         this.mpaint = new Paint();
         mpaint.setStyle(Paint.Style.STROKE);
@@ -75,7 +77,7 @@ public class FLine implements Cloneable,Selectable{
         this.Id = IdCount++;
     }
     private void checkShape(){
-        if(v1 == v2){
+        if(v1 != null && v1 == v2){
             shape = LineShape.LOOP;
         }
     }
@@ -84,6 +86,9 @@ public class FLine implements Cloneable,Selectable{
     }
     public boolean IsArc(){
         return shape == LineShape.ARC;
+    }
+    public boolean IsLine(){
+        return shape == LineShape.LINE;
     }
     public void Draw(Canvas canvas){
         if(p == null){
@@ -115,7 +120,7 @@ public class FLine implements Cloneable,Selectable{
                 drawArc(p, centreX, centreY, vectorX, vectorY, mtheta, (int)Math.ceil(radius * mtheta / 10), false);
                 break;
             case LOOP:
-
+                p.addCircle(x1 + arcVectorX,y1 + arcVectorY, (float) Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY), Path.Direction.CW);
                 break;
         }
     }
@@ -181,7 +186,27 @@ public class FLine implements Cloneable,Selectable{
 
                 break;
             case LOOP:
+                centreX = x1 + arcVectorX;
+                centreY = y1 + arcVectorY;
+                vectorX = x1 - centreX;
+                vectorY = y1 - centreY;
+                uvectorX = vectorX / (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                uvectorY = vectorY / (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
 
+                mtheta = (float)Math.PI * 2;
+
+                vectorX2 = x2 - centreX;
+                vectorY2 = y2 - centreY;
+                uvectorX2 = vectorX2 / (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                uvectorY2 = vectorY2 / (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+
+                path_selector.moveTo(centreX + vectorX - uvectorX * r, centreY + vectorY - uvectorY * r);
+                drawArc(path_selector, centreX, centreY, vectorX - uvectorX * r, vectorY - uvectorY * r, mtheta, 40, false);
+                drawArc(path_selector, x1, y1, -uvectorX2 * r, -uvectorY2 * r, (float) Math.PI, 20, true);
+                drawArc(path_selector, centreX, centreY, vectorX2 + uvectorX2 * r, vectorY2 + uvectorY2 * r, mtheta, 40, true);
+                drawArc(path_selector, x1, y1, uvectorX * r, uvectorY * r, (float) Math.PI, 20, true);
+
+                dashedLineTo(path_selector_radiusIndicator, centreX, centreY, x1, y1, 10);
                 break;
         }
     }
@@ -219,6 +244,12 @@ public class FLine implements Cloneable,Selectable{
         }
         refresh();
     }
+
+    public void setArcVector(float x,float y){
+        arcVectorX = x;
+        arcVectorY = y;
+        refresh();
+    }
     protected boolean Touched(float x,float y,float criticaldistance){
         float length = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
         float k1x = (x2 - x1) / length;
@@ -249,6 +280,17 @@ public class FLine implements Cloneable,Selectable{
                 }
                 break;
             case LOOP:
+                radius = (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+                centreX = x1 + arcVectorX;
+                centreY = y1 + arcVectorY;
+                vectorX = x - centreX;
+                vectorY = y - centreY;
+                distance = distance(x,y,centreX,centreY);
+                float cosine = (vectorX * arcVectorX + vectorY * arcVectorY) / radius / distance;
+                if(cosine > -(1 - r1 * r1 / radius/radius / 2)){
+                    return Math.abs(distance - radius) <= criticaldistance;
+                }
+                break;
         }
         return false;
     }
@@ -282,6 +324,7 @@ public class FLine implements Cloneable,Selectable{
     }
 
     protected void refresh(){
+        checkShape();
         this.p = null;
         this.path_selector = null;
         this.path_selector_radiusIndicator = null;
@@ -294,46 +337,77 @@ public class FLine implements Cloneable,Selectable{
         }
     }
     public void setRadiusVector(float r){
+        shape = LineShape.ARC;
         this.radius = r;
         refresh();
     }
     public float getRadius(){
-        float distance = distance(x1,y1,x2,y2);
-        return (float)Math.sqrt(radius * radius + distance * distance / 4);
+        if(shape != LineShape.LOOP) {
+            float distance = distance(x1, y1, x2, y2);
+            return (float) Math.sqrt(radius * radius + distance * distance / 4);
+        }
+        else{
+            return (float) Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
+        }
     }
     public float getRadiusVector(){
         return this.radius;
     }
     public void ConvertToArc(){
+        if(shape == LineShape.LOOP) throw new IllegalStateException("shape convertion not allowed when the line is a loop.");
         this.radius = 0;
         shape = LineShape.ARC;
         refresh();
     }
 
     public void ConvertToLine(){
+        if(shape == LineShape.LOOP) throw new IllegalStateException("shape convertion not allowed when the line is a loop.");
         shape = LineShape.LINE;
         refresh();
     }
 
-    protected void Delete(){
-        if(this.v1 != null) v1.lines.remove(this);
-        if(this.v2 != null) v2.lines.remove(this);
+    public boolean IsLoop(){
+        return shape == LineShape.LOOP;
     }
-    public float[] getCentre(){
-        if(IsArc()){
-            float distance = distance(x1,y1,x2,y2);
-            float t1x = -(y2 - y1) / distance;
-            float t1y = (x2 - x1) / distance;
-            return new float[]{(x1 + x2) / 2 + t1x * radius,(y1 + y2) / 2 + t1y * radius};
+    public float getRadiusVectorX(){
+        if(shape != LineShape.LOOP) throw new IllegalStateException("not a loop");
+        return arcVectorX;
+    }
+    public float getRadiusVectorY(){
+        if(shape != LineShape.LOOP) throw new IllegalStateException("not a loop");
+        return arcVectorY;
+    }
+
+    protected void Delete(){
+        if(shape != LineShape.LOOP) {
+            if (this.v1 != null) v1.lines.remove(this);
+            if (this.v2 != null) v2.lines.remove(this);
         }
         else{
-            return null;
+            if(v1 != null) v1.lines.remove(this);
         }
+    }
+    public float[] getCentre(){
+        switch (shape){
+            case LINE:return null;
+            case ARC:
+                float distance = distance(x1,y1,x2,y2);
+                float t1x = -(y2 - y1) / distance;
+                float t1y = (x2 - x1) / distance;
+                return new float[]{(x1 + x2) / 2 + t1x * radius,(y1 + y2) / 2 + t1y * radius};
+            case LOOP:return new float[]{x1 + arcVectorX,y1 + arcVectorY};
+        }
+        return null;
     }
 
     public float getMAngle(){
-        float length = distance(x1,y1,x2,y2);
-        return (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,radius);
+        if(shape != LineShape.LOOP) {
+            float length = distance(x1, y1, x2, y2);
+            return (float) Math.PI * 2 - 2 * (float) Math.atan2(length / 2, radius);
+        }
+        else{
+            return 2 * (float) Math.PI;
+        }
     }
 
     public void flip(){
@@ -346,6 +420,8 @@ public class FLine implements Cloneable,Selectable{
         FVertex v = this.v1;
         this.v1 = this.v2;
         this.v2 = v;
+
+        ACW = !ACW;
         refresh();
     }
 
