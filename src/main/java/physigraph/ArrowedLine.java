@@ -64,7 +64,7 @@ public class ArrowedLine extends FLine{
                 vectorX /= radius;
                 vectorY /= radius;
                 v2x = vectorY;
-                v2y = -vectorX;
+                v2y = ACW ? vectorX : -vectorX;
                 p.moveTo(centreX + vectorX * radius,centreY + vectorY * radius);
                 p.lineTo(centreX + vectorX * (radius - arrowHeight) - v2x * arrowWidth, centreY + vectorY * (radius - arrowHeight) - v2y * arrowWidth);
                 p.moveTo(centreX + vectorX * radius, centreY + vectorY * radius);

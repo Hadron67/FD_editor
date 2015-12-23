@@ -58,13 +58,13 @@ public class ArrowedDashedLine extends DashedLine{
                 radius = (float)Math.sqrt(arcVectorX * arcVectorX + arcVectorY * arcVectorY);
                 centreX = x1 + arcVectorX;
                 centreY = y1 + arcVectorY;
-                mtheta = (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2,this.radius);
+                mtheta = (float)Math.PI * 2 - 2 * (float)Math.atan2(length / 2, this.radius);
                 vectorX = (x1 - centreX) * (float)Math.cos(mtheta * arrowPosition) + (y1 - centreY) * (float)Math.sin(mtheta * arrowPosition);
                 vectorY =-(x1 - centreX) * (float)Math.sin(mtheta * arrowPosition) + (y1 - centreY) * (float)Math.cos(mtheta * arrowPosition);
                 vectorX /= radius;
                 vectorY /= radius;
                 v2x = vectorY;
-                v2y = -vectorX;
+                v2y = ACW ? vectorX : -vectorX;
                 p.moveTo(centreX + vectorX * radius,centreY + vectorY * radius);
                 p.lineTo(centreX + vectorX * (radius - arrowHeight) - v2x * arrowWidth, centreY + vectorY * (radius - arrowHeight) - v2y * arrowWidth);
                 p.moveTo(centreX + vectorX * radius, centreY + vectorY * radius);

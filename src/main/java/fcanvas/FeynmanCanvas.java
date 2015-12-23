@@ -72,6 +72,9 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
 
     private float lastTouchX, lastTouchY;
 
+    private float currentX,currentY;
+    private VertexIndicatorLine vLine;
+
     private CommandManager cmdmgr = null;
 
     private ScaleGestureDetector zoomDetector = null;
@@ -113,7 +116,7 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
             zoomy = detector.getFocusY();
             FeynmanCanvas.this.update();
             lastscale = newscale;
-            currentVertex = null;
+            unrefCurrentVertex();
             return true;
         }
 
@@ -175,6 +178,9 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
         }
         if(linesetter.hasLine()){
             linesetter.Draw(canvas);
+        }
+        if(vLine != null){
+            vLine.draw(canvas);
         }
         this.fdiagram.Draw(canvas);
         if(mode == EditType.SELECT_AREA){
@@ -238,12 +244,19 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
     }
     private void rescaleAreaSelector(float scale,float x,float y){
         if(mode == EditType.SELECT_AREA){
-            areaselector.rescale(scale,x,y);
+            areaselector.rescale(scale, x, y);
         }
     }
     private void moveAreaSelector(float dx,float dy){
         if(mode == EditType.SELECT_AREA){
             areaselector.movePos(dx, dy);
+        }
+    }
+    private void unrefCurrentVertex(){
+        if(currentVertex != null){
+            fdiagram.removeVertex(currentVertex);
+            currentVertex = null;
+            vLine = null;
         }
     }
     private PopupMenu getLineOperationsMenu(){
@@ -392,6 +405,15 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
                     case DRAW_VERTEX:
                         if (coordinate != null) {
                             currentVertex = getNewVertex(coordinate[0], coordinate[1]);
+                            currentX = coordinate[0];
+                            currentY = coordinate[1];
+                            vLine = new VertexIndicatorLine(currentX,currentY,currentX,currentY);
+                        }
+                        else if(vertex != null){
+                            currentVertex = getNewVertex(vertex.getX(), vertex.getY());
+                            currentX = vertex.getX() * fdiagram.getScale() + fdiagram.getCX();
+                            currentY = vertex.getY() * fdiagram.getScale() + fdiagram.getCY();
+                            vLine = new VertexIndicatorLine(currentX,currentY,currentX,currentY);
                         }
                         break;
                     case CHOOSE:
@@ -406,11 +428,10 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
                             }
                             return true;
                         }
-                        selectedLine = fdiagram.selectLine(event.getX(), event.getY(), Lattice.POINT_RADIUS * 4f);
-                        linesetter.setLine(selectedLine);
-                        if (selectedLine == null) {
-                            linesetter.setLine(null);
-                            selectedVertex = fdiagram.selectVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 4f);
+                        selectedVertex = fdiagram.selectVertex(event.getX(), event.getY(), Lattice.POINT_RADIUS * 3f);
+                        if (selectedVertex == null) {
+                            selectedLine = fdiagram.selectLine(event.getX(), event.getY(), Lattice.POINT_RADIUS * 3f);
+                            linesetter.setLine(selectedLine);
                         }
                         if (selectedLine == null && selectedVertex == null)
                             fdiagram.Deselect();
@@ -431,6 +452,26 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
                             }
                         }
                         FeynmanCanvas.this.update();
+                        break;
+                    case DRAW_VERTEX:
+                        if(currentVertex != null){
+                            float x,y;
+                            if(vertex != null){
+                                x = vertex.getX() * fdiagram.getScale() + fdiagram.getCX();
+                                y = vertex.getY() * fdiagram.getScale() + fdiagram.getCY();
+                            }
+                            else if(coordinate != null){
+                                x = coordinate[0];
+                                y = coordinate[1];
+                            }
+                            else{
+                                x = event.getX();
+                                y = event.getY();
+                            }
+                            currentVertex.setPos(((currentX + x) / 2 - fdiagram.getCX()) / fdiagram.getScale(),((currentY + y) / 2 - fdiagram.getCY()) / fdiagram.getScale());
+                            vLine.setEndPos(x,y);
+                            FeynmanCanvas.this.update();
+                        }
                         break;
                     case CHOOSE:
                         if (isSettingRadius) {
@@ -477,6 +518,7 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
                         cmdmgr.add(new AddVertexCommand(currentVertex));
                     }
                     currentVertex = null;
+                    vLine = null;
                 }
 
                 //update canvas
@@ -502,6 +544,7 @@ public class FeynmanCanvas extends View implements View.OnTouchListener,View.OnL
                         break;
                     case DRAW_VERTEX:
                         currentVertex = null;
+                        vLine = null;
                         break;
                 }
                 Log.d("in ontouch","event cancelled.");
